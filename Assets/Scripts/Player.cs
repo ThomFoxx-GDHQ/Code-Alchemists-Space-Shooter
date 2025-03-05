@@ -24,9 +24,16 @@ public class Player : MonoBehaviour
     private float _whenCanFire = -1; // Tracks when the player can shoot again
     [SerializeField] private Transform _laserContainer;
 
+    private SpawnManager _spawnManager;
+
+    private int _health = 3;
+
     void Start()
     {
-        // Initialization (currently unused)
+        _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
+
+        if (_spawnManager == null)
+            Debug.LogError("SpawnManager is Null!!!", this);
     }
 
     void Update()
@@ -77,5 +84,17 @@ public class Player : MonoBehaviour
 
         // Set cooldown time to delay the next shot
         _whenCanFire = Time.time + _fireRate;
+    }
+
+    public void Damage()
+    {
+        _health--;
+
+        if (_health <=0)
+        {
+            _spawnManager.OnPlayerDeath();
+            Destroy(this.gameObject);
+        }
+
     }
 }
