@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Projectile
+  - Container
   layers:
   - Default
   - TransparentFX
@@ -39,8 +40,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 2449320613
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Foreground
+    uniqueID: 1409868205
     locked: 0
   m_RenderingLayers:
   - Default

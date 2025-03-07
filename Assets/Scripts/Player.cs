@@ -20,9 +20,13 @@ public class Player : MonoBehaviour
     // Laser shooting settings
     [Header("Laser Settings")]
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private Vector3 _laserOffset;
     [SerializeField] private float _fireRate = 2.5f;
     private float _whenCanFire = -1; // Tracks when the player can shoot again
     [SerializeField] private Transform _laserContainer;
+    [Header("Quad Shot Settings")]
+    [SerializeField] GameObject _quadshotPreab;
+    [SerializeField] bool _isQuadActive;
 
     private SpawnManager _spawnManager;
 
@@ -79,9 +83,16 @@ public class Player : MonoBehaviour
 
     private void FireLaser()
     {
-        // Instantiate a laser projectile at the player's position
-        Instantiate(_laserPrefab, transform.position, Quaternion.identity, _laserContainer);
-
+        if (_isQuadActive == true)
+        {
+            //Instantiate a Quad Shot Projectile.
+            Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
+        }
+        else
+        {
+            // Instantiate a laser projectile at the player's position
+            Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
+        }
         // Set cooldown time to delay the next shot
         _whenCanFire = Time.time + _fireRate;
     }
