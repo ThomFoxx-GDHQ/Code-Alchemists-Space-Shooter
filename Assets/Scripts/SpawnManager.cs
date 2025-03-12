@@ -6,6 +6,9 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private Transform _enemyContainer;
+    [SerializeField] private GameObject[] _powerUpPrefabs;
+    [SerializeField] private Transform _powerUpContainer;
+
     [Header("Spawn Area")]
     [Tooltip("This is for the Positive to Negative Range of the Random X position. Where X is left and Y is Right.")]
     [SerializeField] private Vector2 _spawnXRange;
@@ -15,6 +18,7 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(EnemySpawnRoutine());
+        StartCoroutine(PowerupSpawnRoutine());
     }
 
     IEnumerator EnemySpawnRoutine()
@@ -23,6 +27,16 @@ public class SpawnManager : MonoBehaviour
         {
             float randomX = Random.Range(_spawnXRange.x, _spawnXRange.y);
             Instantiate(_enemyPrefab, new Vector3(randomX,_topSpawnArea,0), Quaternion.identity, _enemyContainer);
+            yield return new WaitForSeconds(2);
+        }
+    }
+
+    IEnumerator PowerupSpawnRoutine()
+    {
+        while(_canSpawn)
+        {
+            float randomX = Random.Range(_spawnXRange.x, _spawnXRange.y);
+            Instantiate(_powerUpPrefabs[0], new Vector3(randomX, _topSpawnArea, 0), Quaternion.identity, _powerUpContainer);
             yield return new WaitForSeconds(2);
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -29,6 +30,8 @@ public class Player : MonoBehaviour
     [SerializeField] bool _isQuadActive;
 
     private SpawnManager _spawnManager;
+
+    private Coroutine _QuadPowerTimerRoutine;
 
     private int _health = 3;
 
@@ -107,5 +110,25 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+    }
+
+    public void ActivateQuadShot()
+    {
+        _isQuadActive = true;
+
+        if (_QuadPowerTimerRoutine == null)
+            _QuadPowerTimerRoutine = StartCoroutine(QuadShotPowerDownRoutine());
+        else
+        {
+            StopCoroutine(_QuadPowerTimerRoutine);
+            _QuadPowerTimerRoutine = StartCoroutine(QuadShotPowerDownRoutine());
+        }
+    }
+
+    IEnumerator QuadShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _isQuadActive = false;
+        _QuadPowerTimerRoutine = null;
     }
 }
