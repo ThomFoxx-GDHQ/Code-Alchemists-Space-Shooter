@@ -27,13 +27,21 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform _laserContainer;
     [Header("Quad Shot Settings")]
     [SerializeField] GameObject _quadshotPreab;
-    [SerializeField] bool _isQuadActive;
+    bool _isQuadActive;
 
     private SpawnManager _spawnManager;
 
     private Coroutine _QuadPowerTimerRoutine;
+    private Coroutine _SpeedBoostTimerRoutine;
 
     private int _health = 3;
+    [SerializeField] private Transform _shieldVisuals;
+    [SerializeField] private bool _isShieldActive;
+    private int _currentShieldHealth = 3;
+    [SerializeField] private int _maxShieldHealth = 3;
+
+    [SerializeField] private float _speedBoostMultiplier = 2;
+    private float _boostedMultiper = 1;
 
     void Start()
     {
@@ -41,6 +49,8 @@ public class Player : MonoBehaviour
 
         if (_spawnManager == null)
             Debug.LogError("SpawnManager is Null!!!", this);
+
+        ShieldActive(_isShieldActive);
     }
 
     void Update()
@@ -62,7 +72,7 @@ public class Player : MonoBehaviour
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
 
         // Move player based on input and speed
-        transform.Translate(_direction * (_speed * Time.deltaTime));
+        transform.Translate(_direction * (_speed * _boostedMultiper * Time.deltaTime));
 
         // Check movement boundaries only if the player is moving
         if (_direction != Vector3.zero)
@@ -102,6 +112,17 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        if (_isShieldActive)
+        {
+            _currentShieldHealth--;
+            if (_currentShieldHealth <= 0)
+            {
+                _isShieldActive = false;
+                ShieldActive(false);
+            }
+            return;
+        }
+
         _health--;
 
         if (_health <=0)
@@ -109,7 +130,6 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
-
     }
 
     public void ActivateQuadShot()
@@ -130,5 +150,32 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _isQuadActive = false;
         _QuadPowerTimerRoutine = null;
+    }
+
+    public void ShieldActive(bool isActive)
+    {
+        _shieldVisuals.gameObject.SetActive(isActive);
+        _isShieldActive = isActive;
+        _currentShieldHealth = _maxShieldHealth;
+    }
+
+    public void ActivateSpeedBoost()
+    {
+        _boostedMultiper = _speedBoostMultiplier;
+
+        if (_SpeedBoostTimerRoutine == null)
+            _SpeedBoostTimerRoutine = StartCoroutine(SpeedBoostCountdownRoutine());
+        else
+        {
+            StopCoroutine(_SpeedBoostTimerRoutine);
+            _SpeedBoostTimerRoutine = StartCoroutine(SpeedBoostCountdownRoutine());
+        }
+    }
+
+    IEnumerator SpeedBoostCountdownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _boostedMultiper = 1;
+        _SpeedBoostTimerRoutine = null;
     }
 }

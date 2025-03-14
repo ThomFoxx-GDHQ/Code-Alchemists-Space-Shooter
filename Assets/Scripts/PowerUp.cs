@@ -33,8 +33,10 @@ public class PowerUp : MonoBehaviour
                     player.ActivateQuadShot();
                     break;
                 case PowerUpType.SpeedBoost:
+                    player.ActivateSpeedBoost();
                     break;
                 case PowerUpType.Shield:
+                    player.ShieldActive(true);
                     break;
                 default:
                     break;
