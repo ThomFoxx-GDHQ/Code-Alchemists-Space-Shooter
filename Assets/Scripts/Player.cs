@@ -37,8 +37,9 @@ public class Player : MonoBehaviour
     private int _health = 3;
     [SerializeField] private Transform _shieldVisuals;
     [SerializeField] private bool _isShieldActive;
-    private int _currentShieldHealth = 3;
+    private int _currentShieldHealth = 0;
     [SerializeField] private int _maxShieldHealth = 3;
+    [SerializeField] private ShieldVisualization _shieldVisualization;
 
     [SerializeField] private float _speedBoostMultiplier = 2;
     private float _boostedMultiper = 1;
@@ -50,7 +51,7 @@ public class Player : MonoBehaviour
         if (_spawnManager == null)
             Debug.LogError("SpawnManager is Null!!!", this);
 
-        ShieldActive(_isShieldActive);
+        ShieldActive(_isShieldActive, _currentShieldHealth);
     }
 
     void Update()
@@ -115,15 +116,17 @@ public class Player : MonoBehaviour
         if (_isShieldActive)
         {
             _currentShieldHealth--;
+            _shieldVisualization.ApplyHealth(_currentShieldHealth);
             if (_currentShieldHealth <= 0)
             {
                 _isShieldActive = false;
-                ShieldActive(false);
+                ShieldActive(false, 0);
             }
             return;
         }
 
         _health--;
+        UIManager.Instance.UpdateLives(_health);
 
         if (_health <=0)
         {
@@ -152,11 +155,17 @@ public class Player : MonoBehaviour
         _QuadPowerTimerRoutine = null;
     }
 
-    public void ShieldActive(bool isActive)
+    public void ShieldActive(bool isActive, int health)
     {
         _shieldVisuals.gameObject.SetActive(isActive);
         _isShieldActive = isActive;
-        _currentShieldHealth = _maxShieldHealth;
+
+        _currentShieldHealth = health;
+
+        if (_currentShieldHealth > _maxShieldHealth)
+            _currentShieldHealth = _maxShieldHealth;
+
+        _shieldVisualization.ApplyHealth(_currentShieldHealth);
     }
 
     public void ActivateSpeedBoost()
