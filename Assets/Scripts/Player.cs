@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private float _horizontalInput;
     private float _verticalInput;
     private Vector3 _direction;
+    private int _score;
 
     // Boundaries to restrict player movement
     [Header("ScreenPlay Boundaries")]
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
             Debug.LogError("SpawnManager is Null!!!", this);
 
         ShieldActive(_isShieldActive, _currentShieldHealth);
+        UIManager.Instance.UpdateScore(_score);
     }
 
     void Update()
@@ -130,7 +132,7 @@ public class Player : MonoBehaviour
 
         if (_health <=0)
         {
-            _spawnManager.OnPlayerDeath();
+            _spawnManager.OnPlayerDeath();            
             Destroy(this.gameObject);
         }
     }
@@ -186,5 +188,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _boostedMultiper = 1;
         _SpeedBoostTimerRoutine = null;
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        UIManager.Instance.UpdateScore(_score);
     }
 }

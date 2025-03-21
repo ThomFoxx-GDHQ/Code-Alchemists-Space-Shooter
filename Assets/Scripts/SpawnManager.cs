@@ -14,6 +14,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Vector2 _spawnXRange;
     [SerializeField] private float _topSpawnArea;
     private bool _canSpawn = true;
+    [SerializeField] private GameManager _gameManager;
 
     private void Start()
     {
@@ -46,6 +47,8 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _canSpawn = false;
+        UIManager.Instance.GameOver();
+        _gameManager.OnPlayerDeath(); ;
         Enemy[] enemies = GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         foreach (Enemy enemy in enemies)
         {

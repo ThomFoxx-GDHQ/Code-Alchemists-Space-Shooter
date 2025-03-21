@@ -11,6 +11,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _bottomBound;
 
     private bool _canRespawn = true;
+    private Player _player;
+    [SerializeField] int _pointValue = 10;
+
+    private void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+    }
 
     private void Update()
     {
@@ -40,11 +47,13 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<Player>()?.Damage();     
+            _player.Damage();
+            _player.AddScore(_pointValue);
             Destroy(this.gameObject);
         }
         if (other.CompareTag("Projectile"))
         {
+            _player.AddScore(_pointValue);
             Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
