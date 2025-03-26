@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     private bool _canRespawn = true;
     private Player _player;
     [SerializeField] int _pointValue = 10;
+    [SerializeField] GameObject _explosionPrefab;
+    [SerializeField] float _explosionCoverUpDelay = .33f;
 
     private void Start()
     {
@@ -48,15 +50,24 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _player.Damage();
-            _player.AddScore(_pointValue);
-            Destroy(this.gameObject);
+            OnEnemyDeath();
         }
         if (other.CompareTag("Projectile"))
         {
-            _player.AddScore(_pointValue);
             Destroy(other.gameObject);
-            Destroy(this.gameObject);
+            OnEnemyDeath();
         }
+    }
+
+    private void OnEnemyDeath()
+    {
+        _player.AddScore(_pointValue);
+        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        _speed = 0;
+        GetComponent<Collider>().enabled = false;
+
+        //Always last in this method.
+        Destroy(this.gameObject, _explosionCoverUpDelay);
     }
 
     public void OnPlayerDeath()

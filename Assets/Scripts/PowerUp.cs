@@ -1,10 +1,12 @@
 using UnityEngine;
 
+
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _bottomBounds = -12f;
     [SerializeField] private PowerUpType _powerUpID;
+    [SerializeField] private AudioClip _clip;
 
     private void Update()
     {
@@ -22,7 +24,7 @@ public class PowerUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
+            Player player = other.GetComponent<Player>();            
 
             switch (_powerUpID)
             {
@@ -42,7 +44,18 @@ public class PowerUp : MonoBehaviour
                     break;
             }
 
-            Destroy(this.gameObject);
+            OnCollect();
         }
+    }
+
+    private void OnCollect()
+    {
+        AudioManager.Instance.PlaySoundAtPlayer(_clip);
+        _speed = 0;
+        GetComponentInChildren<Renderer>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+
+        //Always Last in this Method
+        Destroy(this.gameObject, .9f);
     }
 }
