@@ -75,6 +75,8 @@ MonoBehaviour:
   _bottomBound: -12
   _pointValue: 10
   _explosionPrefab: {fileID: 8928584551934129580, guid: 56e5b3c6ad0c5fd428c880c92e32b6af, type: 3}
+  _explosionCoverUpDelay: 0.33
+  _enemyLaserPrefab: {fileID: 906766843473374871, guid: dd3fef9fb1d26ea488e14c7de483c478, type: 3}
 --- !u!54 &4606909001193843459
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -9,7 +9,8 @@ public class AudioManager : MonoBehaviour
         get { return _instance; }
     }
 
-    private AudioSource _audioSource;
+    [SerializeField] private AudioSource _clipAudioSource;
+    [SerializeField] private AudioSource _musicAudioSource;
 
     private void Awake()
     {
@@ -19,16 +20,9 @@ public class AudioManager : MonoBehaviour
             Destroy(this);
     }
 
-    private void Start()
-    {
-        if (_audioSource == null)
-            _audioSource = GetComponent<AudioSource>();
-    }
-
-
     public void PlaySoundAtPlayer(AudioClip clip)
     {
-        _audioSource.clip = clip;
-        _audioSource.Play();
+        _clipAudioSource.clip = clip;
+        _clipAudioSource.Play();
     }
 }

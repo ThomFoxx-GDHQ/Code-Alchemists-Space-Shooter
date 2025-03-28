@@ -3,12 +3,25 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] float _speed = 5f;
+    [SerializeField] bool _isEnemyProjectile;
+
+    public bool IsEnemyProjectile
+    {
+        get { return _isEnemyProjectile; }
+    }
+
+    //private void Start()
+    //{
+    //    Debug.Log($"Direction of travel: {transform.up}");
+    //}
 
     private void Update()
     {
-        transform.Translate(Vector3.up * (_speed * Time.deltaTime));
+        transform.Translate(transform.up * (_speed * Time.deltaTime), Space.World);
+        //transform.Translate(Vector3.up * (_speed * Time.deltaTime), Space.World);
+        
 
-        if (transform.position.y > 10)
+        if (Mathf.Abs(transform.position.y) > 10)
         {
             if (!transform.parent.CompareTag("Container"))
                 Destroy(transform.parent.gameObject);

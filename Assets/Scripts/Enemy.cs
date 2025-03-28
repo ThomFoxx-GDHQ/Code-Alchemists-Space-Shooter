@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -16,9 +17,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject _explosionPrefab;
     [SerializeField] float _explosionCoverUpDelay = .33f;
 
+    [SerializeField] GameObject _enemyLaserPrefab;
+
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+        StartCoroutine(FireLaserRoutine());
     }
 
     private void Update()
@@ -45,6 +49,16 @@ public class Enemy : MonoBehaviour
         transform.position = new Vector3(rng, _topBound, 0);
     }
 
+    IEnumerator FireLaserRoutine()
+    {
+        while (_player != null)
+        {
+            Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+            float randomRefireTime = Random.Range(2, 5);
+            yield return new WaitForSeconds(randomRefireTime);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -54,8 +68,11 @@ public class Enemy : MonoBehaviour
         }
         if (other.CompareTag("Projectile"))
         {
-            Destroy(other.gameObject);
-            OnEnemyDeath();
+            if (!other.GetComponent<Projectile>().IsEnemyProjectile)
+            {
+                Destroy(other.gameObject);
+                OnEnemyDeath();
+            }
         }
     }
 

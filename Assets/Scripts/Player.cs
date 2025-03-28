@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _fireRate = 2.5f;
     private float _whenCanFire = -1; // Tracks when the player can shoot again
     [SerializeField] private Transform _laserContainer;
+    [SerializeField] private AudioClip _laserAudioClip;
+
     [Header("Quad Shot Settings")]
     [SerializeField] GameObject _quadshotPreab;
     bool _isQuadActive;
@@ -41,6 +43,8 @@ public class Player : MonoBehaviour
     private int _currentShieldHealth = 0;
     [SerializeField] private int _maxShieldHealth = 3;
     [SerializeField] private ShieldVisualization _shieldVisualization;
+    [SerializeField] private GameObject[] _damageVisualization;
+
 
     [SerializeField] private float _speedBoostMultiplier = 2;
     private float _boostedMultiper = 1;
@@ -109,6 +113,7 @@ public class Player : MonoBehaviour
             // Instantiate a laser projectile at the player's position
             Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
         }
+        AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
         // Set cooldown time to delay the next shot
         _whenCanFire = Time.time + _fireRate;
     }
@@ -130,12 +135,28 @@ public class Player : MonoBehaviour
         _health--;
         UIManager.Instance.UpdateLives(_health);
 
+        if (_health == 2)
+        {
+            int rng = Random.Range(0, _damageVisualization.Length);
+            _damageVisualization[rng].SetActive(true);
+        }
+
+        if (_health == 1)
+        {
+            if (_damageVisualization[0].activeInHierarchy == false)
+                _damageVisualization[0].SetActive(true);
+            else
+                _damageVisualization[1].SetActive(true);
+        }
+
         if (_health <=0)
         {
             _spawnManager.OnPlayerDeath();            
             //Destroy(this.gameObject);
             transform.GetChild(0).gameObject.SetActive(false);
             transform.GetChild(1).gameObject.SetActive(false);
+            _damageVisualization[0].SetActive(false);
+            _damageVisualization[1].SetActive(false);
             this.enabled = false;
         }
     }
@@ -197,5 +218,13 @@ public class Player : MonoBehaviour
     {
         _score += points;
         UIManager.Instance.UpdateScore(_score);
+    }
+
+    public void RestoreHealth()
+    {
+        if (_damageVisualization[0].activeInHierarchy == true)
+            _damageVisualization[0].SetActive(false);
+        else
+            _damageVisualization[1].SetActive(false);
     }
 }
