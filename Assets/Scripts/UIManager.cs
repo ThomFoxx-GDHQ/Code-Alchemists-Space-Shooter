@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _gameOverText;
     [SerializeField] private GameObject _restartText;
 
+    [SerializeField] private Slider _thrusterSlider;
+    [SerializeField] private Image _thrusterImage;
+
     private void Awake()
     {
         if (_instance == null)
@@ -55,6 +58,23 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int score)
     {
         _scoreText.text = $"Score: {score}";
+    }
+
+    public void UpdateThruster(float thrusterValue)
+    {
+        if (thrusterValue <= 0 && _thrusterSlider.gameObject.activeInHierarchy)
+        {
+            _thrusterSlider.gameObject.SetActive(false);
+            _thrusterImage.gameObject.SetActive(false);
+        }
+        else if (thrusterValue > 0 && !_thrusterSlider.gameObject.activeInHierarchy)
+        {
+            _thrusterSlider.gameObject.SetActive(true);
+            _thrusterImage.gameObject.SetActive(true);
+        }
+
+        _thrusterSlider.SetValueWithoutNotify(thrusterValue);
+        _thrusterImage.fillAmount = thrusterValue/100;
     }
 
     public void GameOver()

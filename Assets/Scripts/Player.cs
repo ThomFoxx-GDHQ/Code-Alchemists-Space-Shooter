@@ -45,9 +45,18 @@ public class Player : MonoBehaviour
     [SerializeField] private ShieldVisualization _shieldVisualization;
     [SerializeField] private GameObject[] _damageVisualization;
 
-
     [SerializeField] private float _speedBoostMultiplier = 2;
     private float _boostedMultiper = 1;
+
+    [SerializeField] private float _thrustMultiplier = 2;
+    private float _thrustingMultiplier = 1;
+
+    private bool _isThrustActive = false;
+    private float _engineHeat = 0;
+    [SerializeField] private float _heatingRate = 2;
+    [SerializeField] private float _cooldoawnRate = 1.5f;
+    [SerializeField] private float _maxEngineHeat = 100;
+    private bool _isEngineOverheated = false;
 
     void Start()
     {
@@ -58,10 +67,13 @@ public class Player : MonoBehaviour
 
         ShieldActive(_isShieldActive, _currentShieldHealth);
         UIManager.Instance.UpdateScore(_score);
+        UIManager.Instance.UpdateThruster(_engineHeat);
     }
 
     void Update()
     {
+        ThrusterCalculations(); //Process whether Thruster is being used this frame
+
         CalculateMovement(); // Process movement input and apply movement
 
         // Check if space key is pressed and shooting cooldown has elapsed
@@ -69,6 +81,46 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+    }
+
+    private void ThrusterCalculations()
+    {
+        if (_engineHeat <= _maxEngineHeat && !_isEngineOverheated)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                _thrustingMultiplier = _thrustMultiplier;
+                _isThrustActive = true;
+            }
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                _thrustingMultiplier = 1;
+                _isThrustActive = false;
+            }
+        }
+        else if (_engineHeat > _maxEngineHeat)
+        {
+            _engineHeat = _maxEngineHeat;
+            _thrustingMultiplier = 1;
+            _isThrustActive = false;
+            _isEngineOverheated = true;
+        }
+
+        if (_engineHeat < 0)
+        {
+            _engineHeat = 0;
+            _isEngineOverheated = false;
+        }
+
+        //_engineHeat = Mathf.Clamp(_engineHeat, 0, 100);
+
+        if (_isThrustActive && _engineHeat < _maxEngineHeat)
+            _engineHeat += _heatingRate * Time.deltaTime;
+
+        if (!_isThrustActive && _engineHeat > 0)
+            _engineHeat -= _cooldoawnRate * Time.deltaTime;
+
+        UIManager.Instance.UpdateThruster(_engineHeat);
     }
 
     private void CalculateMovement()
@@ -79,7 +131,7 @@ public class Player : MonoBehaviour
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
 
         // Move player based on input and speed
-        transform.Translate(_direction * (_speed * _boostedMultiper * Time.deltaTime));
+        transform.Translate(_direction * (_speed * _boostedMultiper * _thrustingMultiplier * Time.deltaTime));
 
         // Check movement boundaries only if the player is moving
         if (_direction != Vector3.zero)
