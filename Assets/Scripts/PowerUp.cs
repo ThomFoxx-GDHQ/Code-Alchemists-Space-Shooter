@@ -7,6 +7,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private float _bottomBounds = -12f;
     [SerializeField] private PowerUpType _powerUpID;
     [SerializeField] private AudioClip _clip;
+    [SerializeField] private int _powerupAmount = 5;
 
     private void Update()
     {
@@ -39,6 +40,12 @@ public class PowerUp : MonoBehaviour
                     break;
                 case PowerUpType.Shield:
                     player.ShieldActive(true, 99);
+                    break;
+                case PowerUpType.Ammo:
+                    player.AddAmmo(_powerupAmount);
+                    break;
+                case PowerUpType.Repair:
+                    player.AddHealth();
                     break;
                 default:
                     break;

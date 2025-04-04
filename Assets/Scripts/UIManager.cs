@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider _thrusterSlider;
     [SerializeField] private Image _thrusterImage;
 
+    [SerializeField] private TMP_Text _ammoText;
+
     private void Awake()
     {
         if (_instance == null)
@@ -76,6 +78,11 @@ public class UIManager : MonoBehaviour
         _thrusterSlider.SetValueWithoutNotify(thrusterValue);
         _thrusterImage.fillAmount = thrusterValue/100;
     }
+    
+    public void UpdateAmmoCount(int amount)
+    {
+        _ammoText.text = $"Ammo: {amount}";
+    }
 
     public void GameOver()
     {
@@ -94,4 +101,5 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
         }
     }
+
 }

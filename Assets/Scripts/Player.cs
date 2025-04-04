@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
     private float _whenCanFire = -1; // Tracks when the player can shoot again
     [SerializeField] private Transform _laserContainer;
     [SerializeField] private AudioClip _laserAudioClip;
+    [SerializeField] private int _maxAmmoCount = 30;
+    int _ammoCount = 15;
 
     [Header("Quad Shot Settings")]
     [SerializeField] GameObject _quadshotPreab;
@@ -58,6 +60,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _maxEngineHeat = 100;
     private bool _isEngineOverheated = false;
 
+    [SerializeField] private AudioSource _audioSource;
+
     void Start()
     {
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
@@ -68,6 +72,8 @@ public class Player : MonoBehaviour
         ShieldActive(_isShieldActive, _currentShieldHealth);
         UIManager.Instance.UpdateScore(_score);
         UIManager.Instance.UpdateThruster(_engineHeat);
+        UIManager.Instance.UpdateAmmoCount(_ammoCount);
+
     }
 
     void Update()
@@ -155,19 +161,32 @@ public class Player : MonoBehaviour
 
     private void FireLaser()
     {
-        if (_isQuadActive == true)
+        if (_ammoCount > 0)
         {
-            //Instantiate a Quad Shot Projectile.
-            Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
+            if (_isQuadActive == true)
+            {
+                //Instantiate a Quad Shot Projectile.
+                Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
+            }
+            else
+            {
+                // Instantiate a laser projectile at the player's position
+                Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
+            }
+            AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
+            _ammoCount--;
+            UIManager.Instance.UpdateAmmoCount(_ammoCount);
         }
         else
         {
-            // Instantiate a laser projectile at the player's position
-            Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
+            //Display "Out Of Ammo"
+            //Makes a sound for out of ammo
+            _audioSource?.Play();
         }
-        AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
-        // Set cooldown time to delay the next shot
-        _whenCanFire = Time.time + _fireRate;
+
+
+            // Set cooldown time to delay the next shot
+            _whenCanFire = Time.time + _fireRate;        
     }
 
     public void Damage()
@@ -224,6 +243,9 @@ public class Player : MonoBehaviour
             StopCoroutine(_QuadPowerTimerRoutine);
             _QuadPowerTimerRoutine = StartCoroutine(QuadShotPowerDownRoutine());
         }
+
+        if (_ammoCount <= 5)
+            AddAmmo(5);
     }
 
     IEnumerator QuadShotPowerDownRoutine()
@@ -278,5 +300,28 @@ public class Player : MonoBehaviour
             _damageVisualization[0].SetActive(false);
         else
             _damageVisualization[1].SetActive(false);
+
+        UIManager.Instance.UpdateLives(_health);
+    }
+
+    public void AddAmmo(int amount)
+    {
+        _ammoCount += amount;
+
+        if (_ammoCount > _maxAmmoCount)
+        {
+            _ammoCount = _maxAmmoCount;
+        }
+
+        UIManager.Instance.UpdateAmmoCount(_ammoCount);
+    }
+
+    public void AddHealth()
+    {
+        _health++;
+        if (_health > 3)
+            _health = 3;
+
+        RestoreHealth();
     }
 }

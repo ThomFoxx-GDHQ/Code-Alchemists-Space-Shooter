@@ -3,7 +3,9 @@ public enum PowerUpType
     None,
     QuadShot,
     SpeedBoost,
-    Shield
+    Shield,
+    Ammo,
+    Repair
 }
 
 public enum Directions
