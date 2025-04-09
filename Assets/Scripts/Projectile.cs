@@ -29,4 +29,13 @@ public class Projectile : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && _isEnemyProjectile == true)
+        {
+            other.GetComponent<Player>()?.Damage();
+            Destroy(this.gameObject);
+        }
+    }
 }

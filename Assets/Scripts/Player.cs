@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -34,6 +35,13 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _quadshotPreab;
     bool _isQuadActive;
 
+    [Header("Gatling Gun Settings")]
+    [SerializeField] Transform[] _gatlingPoints;
+    bool _isGatlingActive;
+    int _gatlingPointCounter;
+    int _currentPoint = 0;
+    [SerializeField] float _gatlingFireRate = .1f;
+
     private SpawnManager _spawnManager;
 
     private Coroutine _QuadPowerTimerRoutine;
@@ -61,6 +69,7 @@ public class Player : MonoBehaviour
     private bool _isEngineOverheated = false;
 
     [SerializeField] private AudioSource _audioSource;
+    private bool _wasHitThisFrame = false;
 
     void Start()
     {
@@ -78,6 +87,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        _wasHitThisFrame = false;
         ThrusterCalculations(); //Process whether Thruster is being used this frame
 
         CalculateMovement(); // Process movement input and apply movement
@@ -163,7 +173,13 @@ public class Player : MonoBehaviour
     {
         if (_ammoCount > 0)
         {
-            if (_isQuadActive == true)
+            if (_isGatlingActive == true)
+            {
+                _currentPoint = _gatlingPointCounter % _gatlingPoints.Length;
+                Instantiate(_laserPrefab, _gatlingPoints[_currentPoint].position, Quaternion.identity, _laserContainer);
+                _gatlingPointCounter++;
+            }
+            else if (_isQuadActive == true)
             {
                 //Instantiate a Quad Shot Projectile.
                 Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
@@ -173,6 +189,7 @@ public class Player : MonoBehaviour
                 // Instantiate a laser projectile at the player's position
                 Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
             }
+
             AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
             _ammoCount--;
             UIManager.Instance.UpdateAmmoCount(_ammoCount);
@@ -184,13 +201,18 @@ public class Player : MonoBehaviour
             _audioSource?.Play();
         }
 
-
-            // Set cooldown time to delay the next shot
-            _whenCanFire = Time.time + _fireRate;        
+        // Set cooldown time to delay the next shot
+        if (_isGatlingActive == true)
+            _whenCanFire = Time.time + _gatlingFireRate;
+        else
+            _whenCanFire = Time.time + _fireRate;
     }
 
     public void Damage()
     {
+        if (_wasHitThisFrame) return;
+
+        _wasHitThisFrame = true;
         if (_isShieldActive)
         {
             _currentShieldHealth--;
@@ -296,11 +318,18 @@ public class Player : MonoBehaviour
 
     public void RestoreHealth()
     {
-        if (_damageVisualization[0].activeInHierarchy == true)
-            _damageVisualization[0].SetActive(false);
+        if (_health == 2)
+        {
+            int RNG = Random.Range(0, _damageVisualization.Length);
+            _damageVisualization[RNG].SetActive(false);
+        }
         else
-            _damageVisualization[1].SetActive(false);
-
+        {
+            if (_damageVisualization[0].activeInHierarchy == true)
+                _damageVisualization[0].SetActive(false);
+            else
+                _damageVisualization[1].SetActive(false);
+        }
         UIManager.Instance.UpdateLives(_health);
     }
 
@@ -323,5 +352,21 @@ public class Player : MonoBehaviour
             _health = 3;
 
         RestoreHealth();
+    }
+
+    public void ActivateGatlingGun()
+    {
+        _isGatlingActive = true;
+        _gatlingPointCounter = 0;
+        StartCoroutine(GatlingShutdownRoutine());
+
+        if (_ammoCount <= 5)
+            AddAmmo(5);
+    }
+
+    IEnumerator GatlingShutdownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _isGatlingActive = false;
     }
 }

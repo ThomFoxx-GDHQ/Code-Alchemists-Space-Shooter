@@ -47,6 +47,9 @@ public class PowerUp : MonoBehaviour
                 case PowerUpType.Repair:
                     player.AddHealth();
                     break;
+                case PowerUpType.GatlingGun:
+                    player.ActivateGatlingGun();
+                    break;
                 default:
                     break;
             }

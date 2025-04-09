@@ -5,7 +5,8 @@ public enum PowerUpType
     SpeedBoost,
     Shield,
     Ammo,
-    Repair
+    Repair,
+    GatlingGun
 }
 
 public enum Directions
