@@ -6,7 +6,16 @@ public enum PowerUpType
     Shield,
     Ammo,
     Repair,
-    GatlingGun
+    GatlingGun,
+    Starburster
+}
+
+public enum FireType
+{
+    Regular,
+    QuadShot,
+    GaitlingGun,
+    StarBurter
 }
 
 public enum Directions

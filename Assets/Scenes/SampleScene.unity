@@ -1019,67 +1019,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!1001 &408554865
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 171065836084029354, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: _speed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3003267708087858936, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_Name
-      value: Gatling Gun PowerUp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 9.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3469937433465127882, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
 --- !u!1 &409487037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1984,6 +1923,7 @@ MonoBehaviour:
   - {fileID: 1615737162174123758, guid: fff8a67beea74ce4a8022e87fb62ba70, type: 3}
   - {fileID: 1329281301320656488, guid: b43af6e68e1f93c48a9e8a63bb131819, type: 3}
   - {fileID: 3003267708087858936, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
+  - {fileID: 1547380999342278495, guid: 7880f9f6ed2aa3d448ff59a65a61952f, type: 3}
   _powerUpContainer: {fileID: 1406610322}
   _spawnXRange: {x: -10, y: 10}
   _topSpawnArea: 12
@@ -2136,6 +2076,8 @@ MonoBehaviour:
   - {fileID: 1877413124}
   - {fileID: 620767369}
   _gatlingFireRate: 0.1
+  _starBursterPrefab: {fileID: 1034216013496219546, guid: 4c7c7c59fd052284e9f96a83ec8a470f, type: 3}
+  _starBursterFireRate: 3
   _shieldVisuals: {fileID: 1551324807}
   _isShieldActive: 0
   _maxShieldHealth: 3
@@ -2149,6 +2091,13 @@ MonoBehaviour:
   _cooldoawnRate: 1.5
   _maxEngineHeat: 100
   _audioSource: {fileID: 980577412}
+  _audioClips:
+  - {fileID: 8300000, guid: 57d3282c0a7f95746adf93fd6e34fa39, type: 3}
+  - {fileID: 8300000, guid: d5b9dd5d990ee12468c3e732496cee2c, type: 3}
+  - {fileID: 8300000, guid: 980109ee0609d914da822907c3c0309c, type: 3}
+  - {fileID: 8300000, guid: 9e3e9f833c83c764ea3e9c8dd91b7ecb, type: 3}
+  - {fileID: 8300000, guid: 1e845e535aa9e7745bc7c4a0317033cd, type: 3}
+  - {fileID: 8300000, guid: 39c2d786fd89f634997483cbbbdf74a8, type: 3}
 --- !u!54 &980577410
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2194,8 +2143,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 6418180475301049370, guid: 4609e060936cb344cba31fba19e20eac, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 57d3282c0a7f95746adf93fd6e34fa39, type: 3}
+  m_Resource: {fileID: 8300000, guid: 57d3282c0a7f95746adf93fd6e34fa39, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3369,4 +3318,3 @@ SceneRoots:
   - {fileID: 980577408}
   - {fileID: 303091450}
   - {fileID: 150708524}
-  - {fileID: 408554865}

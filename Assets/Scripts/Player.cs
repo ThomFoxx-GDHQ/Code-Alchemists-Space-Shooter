@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserAudioClip;
     [SerializeField] private int _maxAmmoCount = 30;
     int _ammoCount = 15;
+    FireType _fireType = FireType.Regular;
 
     [Header("Quad Shot Settings")]
     [SerializeField] GameObject _quadshotPreab;
@@ -41,6 +42,9 @@ public class Player : MonoBehaviour
     int _gatlingPointCounter;
     int _currentPoint = 0;
     [SerializeField] float _gatlingFireRate = .1f;
+    [SerializeField] GameObject _starBursterPrefab;
+    [SerializeField] float _starBursterFireRate = 5f;
+    bool _isStarBursterActive;
 
     private SpawnManager _spawnManager;
 
@@ -69,6 +73,7 @@ public class Player : MonoBehaviour
     private bool _isEngineOverheated = false;
 
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip[] _audioClips;
     private bool _wasHitThisFrame = false;
 
     void Start()
@@ -173,39 +178,60 @@ public class Player : MonoBehaviour
     {
         if (_ammoCount > 0)
         {
-            if (_isGatlingActive == true)
+            switch (_fireType)
             {
-                _currentPoint = _gatlingPointCounter % _gatlingPoints.Length;
-                Instantiate(_laserPrefab, _gatlingPoints[_currentPoint].position, Quaternion.identity, _laserContainer);
-                _gatlingPointCounter++;
-            }
-            else if (_isQuadActive == true)
-            {
-                //Instantiate a Quad Shot Projectile.
-                Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
-            }
-            else
-            {
-                // Instantiate a laser projectile at the player's position
-                Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
-            }
+                case FireType.Regular:
+                    // Instantiate a laser projectile at the player's position
+                    Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
+                    break;
+                case FireType.QuadShot:
+                    //Instantiate a Quad Shot Projectile.
+                    Instantiate(_quadshotPreab, transform.position, Quaternion.identity, _laserContainer);
+                    break;
+                case FireType.GaitlingGun:
+                    _currentPoint = _gatlingPointCounter % _gatlingPoints.Length;
+                    Instantiate(_laserPrefab, _gatlingPoints[_currentPoint].position, Quaternion.identity, _laserContainer);
+                    _gatlingPointCounter++;
+                    break;
+                case FireType.StarBurter:
+                    Instantiate(_starBursterPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
+                    break;
+                default:
+                    break;
+            }            
 
             AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
-            _ammoCount--;
+            if (_isGatlingActive == false)
+                _ammoCount--;
+
             UIManager.Instance.UpdateAmmoCount(_ammoCount);
         }
         else
         {
             //Display "Out Of Ammo"
             //Makes a sound for out of ammo
-            _audioSource?.Play();
+
+            if (_audioClips.Length > 0)
+            {
+                int rng = Random.Range(0, _audioClips.Length);
+                _audioSource.clip = _audioClips[rng];
+                _audioSource.Play();
+            }
         }
 
         // Set cooldown time to delay the next shot
-        if (_isGatlingActive == true)
-            _whenCanFire = Time.time + _gatlingFireRate;
-        else
-            _whenCanFire = Time.time + _fireRate;
+        switch (_fireType)
+        {
+            case FireType.GaitlingGun:
+                _whenCanFire = Time.time + _gatlingFireRate;
+                break;
+            case FireType.StarBurter:
+                _whenCanFire = Time.time + _starBursterFireRate;
+                break;
+            default:
+                _whenCanFire = Time.time + _fireRate;
+                break;
+        }        
     }
 
     public void Damage()
@@ -256,7 +282,7 @@ public class Player : MonoBehaviour
 
     public void ActivateQuadShot()
     {
-        _isQuadActive = true;
+        _fireType = FireType.QuadShot;
 
         if (_QuadPowerTimerRoutine == null)
             _QuadPowerTimerRoutine = StartCoroutine(QuadShotPowerDownRoutine());
@@ -273,7 +299,7 @@ public class Player : MonoBehaviour
     IEnumerator QuadShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
-        _isQuadActive = false;
+        _fireType = FireType.Regular;
         _QuadPowerTimerRoutine = null;
     }
 
@@ -356,7 +382,7 @@ public class Player : MonoBehaviour
 
     public void ActivateGatlingGun()
     {
-        _isGatlingActive = true;
+        _fireType = FireType.GaitlingGun;
         _gatlingPointCounter = 0;
         StartCoroutine(GatlingShutdownRoutine());
 
@@ -367,6 +393,21 @@ public class Player : MonoBehaviour
     IEnumerator GatlingShutdownRoutine()
     {
         yield return new WaitForSeconds(5f);
-        _isGatlingActive = false;
+        _fireType = FireType.Regular;
+    }
+
+    public void ActivateStarBurster()
+    {
+        _fireType = FireType.StarBurter;
+
+        StartCoroutine(StarBursterShutdownRoutine());
+        if (_ammoCount <= 5)
+            AddAmmo(5);
+    }
+
+    IEnumerator StarBursterShutdownRoutine()
+    {
+        yield return new WaitForSeconds(10f);
+        _fireType = FireType.Regular;
     }
 }

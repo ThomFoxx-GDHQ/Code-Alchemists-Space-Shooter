@@ -50,6 +50,9 @@ public class PowerUp : MonoBehaviour
                 case PowerUpType.GatlingGun:
                     player.ActivateGatlingGun();
                     break;
+                case PowerUpType.Starburster:
+                    player.ActivateStarBurster();
+                    break;
                 default:
                     break;
             }
@@ -62,7 +65,11 @@ public class PowerUp : MonoBehaviour
     {
         AudioManager.Instance.PlaySoundAtPlayer(_clip);
         _speed = 0;
-        GetComponentInChildren<Renderer>().enabled = false;
+        //turn off the renderer of the children components.
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+            renderer.enabled = false;
+
         GetComponent<Collider>().enabled = false;
 
         //Always Last in this Method
