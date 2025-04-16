@@ -76,9 +76,14 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip[] _audioClips;
     private bool _wasHitThisFrame = false;
 
+    private CameraManager _cameraManager;
+    [SerializeField] float _cameraShakeDuration = .5f;
+    [SerializeField] float _cameraShakeIntensity = .5f;
+
     void Start()
     {
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
+        _cameraManager = Camera.main.GetComponent<CameraManager>();
 
         if (_spawnManager == null)
             Debug.LogError("SpawnManager is Null!!!", this);
@@ -253,6 +258,8 @@ public class Player : MonoBehaviour
 
         _health--;
         UIManager.Instance.UpdateLives(_health);
+        
+        _cameraManager.CameraShake(_cameraShakeDuration, _cameraShakeIntensity);
 
         if (_health == 2)
         {
