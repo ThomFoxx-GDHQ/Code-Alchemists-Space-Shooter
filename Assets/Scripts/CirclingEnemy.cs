@@ -108,6 +108,8 @@ public class CirclingEnemy : MonoBehaviour
 
     private void OnEnemyDeath()
     {
+        SpawnManager.Instance.OnEnemyDeath();
+
         _player.AddScore(_pointValue);
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         _speed = 0;

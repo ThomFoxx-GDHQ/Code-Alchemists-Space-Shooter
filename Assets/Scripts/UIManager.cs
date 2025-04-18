@@ -26,6 +26,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _thrusterImage;
 
     [SerializeField] private TMP_Text _ammoText;
+    [SerializeField] private TMP_Text _waveText;
+    [SerializeField] private TMP_Text _waveBannerText;
+
+    [SerializeField] private Animator _anim;
 
     private void Awake()
     {
@@ -39,6 +43,8 @@ public class UIManager : MonoBehaviour
     {
         _gameOverText.SetActive(false);
         _restartText.SetActive(false);
+        _waveBannerText.gameObject.SetActive(false);
+        _waveText.gameObject.SetActive(false);
     }
 
     public void UpdateShieldUI(int health)
@@ -64,18 +70,18 @@ public class UIManager : MonoBehaviour
 
     public void UpdateThruster(float thrusterValue)
     {
-        if (thrusterValue <= 0 && _thrusterSlider.gameObject.activeInHierarchy)
+        if (thrusterValue <= 0 && _thrusterImage.gameObject.activeInHierarchy)
         {
-            _thrusterSlider.gameObject.SetActive(false);
+            //_thrusterSlider.gameObject.SetActive(false);
             _thrusterImage.gameObject.SetActive(false);
         }
-        else if (thrusterValue > 0 && !_thrusterSlider.gameObject.activeInHierarchy)
+        else if (thrusterValue > 0 && !_thrusterImage.gameObject.activeInHierarchy)
         {
-            _thrusterSlider.gameObject.SetActive(true);
+            //_thrusterSlider.gameObject.SetActive(true);
             _thrusterImage.gameObject.SetActive(true);
         }
 
-        _thrusterSlider.SetValueWithoutNotify(thrusterValue);
+        //_thrusterSlider.SetValueWithoutNotify(thrusterValue);
         _thrusterImage.fillAmount = thrusterValue/100;
     }
     
@@ -102,4 +108,16 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateWaveText(int waveNumber)
+    {
+        _waveText.text = $"Wave: {waveNumber}";
+    }
+
+    public void UpdateWaveBanner(int waveNumber)
+    {
+        _waveBannerText.text = $"Wave #{waveNumber}";
+        UpdateWaveText(waveNumber);
+        _anim.SetTrigger("WaveBannerTrigger");
+        _waveBannerText.gameObject.SetActive(false);
+    }
 }

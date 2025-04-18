@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1650079285763970070}
   - component: {fileID: 8032025224806871615}
+  - component: {fileID: 7353106636916140145}
+  - component: {fileID: -3497284105793550689}
   m_Layer: 0
   m_Name: CirclingEnemy
   m_TagString: Untagged
@@ -49,7 +51,7 @@ MonoBehaviour:
   _stopPoint: 3
   _pointValue: 10
   _explosionPrefab: {fileID: 8928584551934129580, guid: 56e5b3c6ad0c5fd428c880c92e32b6af, type: 3}
-  _explosionCoverUpDelay: 0.33
+  _explosionCoverUpDelay: 0.1
   _leftBound: -17
   _rightBound: 17
   _topBound: 12
@@ -57,6 +59,56 @@ MonoBehaviour:
   _angluarSpeed: 0.01
   _radius: 3
   _maxTimer: 5
+--- !u!136 &7353106636916140145
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5489689984267234682}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8701584
+  m_Height: 2.311263
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.13428593, z: 0}
+--- !u!54 &-3497284105793550689
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5489689984267234682}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &5205437620708687271
 PrefabInstance:
   m_ObjectHideFlags: 0
