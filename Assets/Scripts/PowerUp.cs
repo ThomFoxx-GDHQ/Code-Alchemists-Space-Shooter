@@ -53,6 +53,9 @@ public class PowerUp : MonoBehaviour
                 case PowerUpType.Starburster:
                     player.ActivateStarBurster();
                     break;
+                case PowerUpType.ControlJam:
+                    player.ActivateJammedControls();
+                    break;
                 default:
                     break;
             }

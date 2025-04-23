@@ -7,7 +7,8 @@ public enum PowerUpType
     Ammo,
     Repair,
     GatlingGun,
-    Starburster
+    Starburster,
+    ControlJam
 }
 
 public enum FireType

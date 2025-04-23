@@ -65,6 +65,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float _thrustMultiplier = 2;
     private float _thrustingMultiplier = 1;
 
+    private float _jammedControlsMultiplier = 1;
+
     private bool _isThrustActive = false;
     private float _engineHeat = 0;
     [SerializeField] private float _heatingRate = 2;
@@ -157,7 +159,7 @@ public class Player : MonoBehaviour
         _direction = new Vector3(_horizontalInput, _verticalInput, 0);
 
         // Move player based on input and speed
-        transform.Translate(_direction * (_speed * _boostedMultiper * _thrustingMultiplier * Time.deltaTime));
+        transform.Translate(_direction * (_speed * _boostedMultiper * _thrustingMultiplier * Time.deltaTime) * _jammedControlsMultiplier);
 
         // Check movement boundaries only if the player is moving
         if (_direction != Vector3.zero)
@@ -416,5 +418,17 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(10f);
         _fireType = FireType.Regular;
+    }
+
+    public void ActivateJammedControls()
+    {
+        _jammedControlsMultiplier = -1;
+        StartCoroutine(JammedControlsCooldownRoutine());
+    }
+
+    IEnumerator JammedControlsCooldownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _jammedControlsMultiplier = 1;
     }
 }

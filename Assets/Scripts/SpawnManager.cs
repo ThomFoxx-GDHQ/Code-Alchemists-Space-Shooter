@@ -53,6 +53,8 @@ public class SpawnManager : MonoBehaviour
             _enemiesInWave = _waveCount * 10;
             UIManager.Instance.UpdateWaveBanner(_waveCount);
 
+            yield return new WaitForSeconds(5f);
+
             //counts for in the wave
             _currentEnemies = 0;
             _spawnedEnemies = 0;
@@ -73,8 +75,6 @@ public class SpawnManager : MonoBehaviour
                 //Debug.Log($"Current Enemy COunt = {_currentEnemies}");
                 yield return null;
             }
-
-            yield return new WaitForSeconds(5f);
         }
     }
 
@@ -82,11 +82,17 @@ public class SpawnManager : MonoBehaviour
     {
         while(_canSpawn && _waveCount < _finalWave)
         {
-            float randomX = Random.Range(_spawnXRange.x, _spawnXRange.y);
-            int randomPowerUp = Random.Range(0, _powerUpPrefabs.Length);
+            while (_currentEnemies > 0)
+            {
+                yield return new WaitForSeconds(5f);
 
-            Instantiate(_powerUpPrefabs[randomPowerUp], new Vector3(randomX, _topSpawnArea, 0), Quaternion.identity, _powerUpContainer);
-            yield return new WaitForSeconds(2);
+                float randomX = Random.Range(_spawnXRange.x, _spawnXRange.y);
+                int randomPowerUp = Random.Range(0, _powerUpPrefabs.Length);
+
+                Instantiate(_powerUpPrefabs[randomPowerUp], new Vector3(randomX, _topSpawnArea, 0), Quaternion.identity, _powerUpContainer);
+                yield return new WaitForSeconds(2);
+            }
+            yield return null;
         }
     }
 

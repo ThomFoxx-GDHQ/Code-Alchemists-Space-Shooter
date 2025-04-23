@@ -61,7 +61,7 @@ public class CirclingEnemy : MonoBehaviour
 
         if (_startCircle)
         {
-            _currentAngle += _angluarSpeed /*+ Time.deltaTime*/;
+            _currentAngle += _angluarSpeed + Time.deltaTime;
             Vector2 offset = new Vector2(Mathf.Sin(_currentAngle), Mathf.Cos(_currentAngle)) * _radius;
             transform.position = _centerPoint + offset;
         }

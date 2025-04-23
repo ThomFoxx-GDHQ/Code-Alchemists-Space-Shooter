@@ -2219,7 +2219,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 933523020}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6984884f11dd7f944998ac9c9dc3b0d4, type: 3}
   m_Name: 
@@ -2236,6 +2236,7 @@ MonoBehaviour:
   - {fileID: 1329281301320656488, guid: b43af6e68e1f93c48a9e8a63bb131819, type: 3}
   - {fileID: 3003267708087858936, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
   - {fileID: 1547380999342278495, guid: 7880f9f6ed2aa3d448ff59a65a61952f, type: 3}
+  - {fileID: 2246402203298762815, guid: c94f6c310ac694d46a76375c140bed24, type: 3}
   _powerUpContainer: {fileID: 1406610322}
   _spawnXRange: {x: -10, y: 10}
   _topSpawnArea: 12
@@ -3621,6 +3622,75 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &6056517203988323757
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626653571563874359, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6000054771834609223, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: m_Name
+      value: SidewaysEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6473441211500734746, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: _leftBounds
+      value: -22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6473441211500734746, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
+      propertyPath: _rightBounds
+      value: 22
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c5be6a1d3f0b4d142b95edb3e6505f9d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3636,3 +3706,4 @@ SceneRoots:
   - {fileID: 980577408}
   - {fileID: 303091450}
   - {fileID: 150708524}
+  - {fileID: 6056517203988323757}

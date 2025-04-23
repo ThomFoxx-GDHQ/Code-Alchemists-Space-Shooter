@@ -56,7 +56,7 @@ MonoBehaviour:
   _rightBound: 17
   _topBound: 12
   _bottomBound: -12
-  _angluarSpeed: 0.01
+  _angluarSpeed: 0.005
   _radius: 3
   _maxTimer: 5
 --- !u!136 &7353106636916140145
