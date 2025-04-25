@@ -55,6 +55,37 @@ CapsuleCollider:
   m_Height: 2.1341023
   m_Direction: 0
   m_Center: {x: -1.2526433, y: -0.08912291, z: 0}
+--- !u!1 &1506338818551624273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4179774242211582476}
+  m_Layer: 0
+  m_Name: FiringPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4179774242211582476
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506338818551624273}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: -0.3, y: -0.21, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4626653571563874359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1 &6000054771834609223
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,10 +114,11 @@ Transform:
   m_GameObject: {fileID: 6000054771834609223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.01, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4179774242211582476}
   - {fileID: 8427966643685933940}
   - {fileID: 5560722672793602976}
   m_Father: {fileID: 0}
@@ -152,8 +184,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
-  _leftBounds: -21
-  _rightBounds: 21
+  _leftBounds: -22
+  _rightBounds: 22
+  _upperBounds: 9
+  _lowerBounds: -3
+  _firingPoint: {fileID: 1506338818551624273}
+  _laserPrefab: {fileID: 455228414595634650, guid: f96dbcc56b9c15b45a1bf58ccd627d62, type: 3}
+  _laserOffset: {x: 0, y: -0.728, z: 0}
+  _fireRate: 2.5
+  _pointValue: 15
+  _explosionPrefab: {fileID: 8928584551934129580, guid: 56e5b3c6ad0c5fd428c880c92e32b6af, type: 3}
+  _explosionCoverUpDelay: 0.33
 --- !u!1001 &3570391112573282414
 PrefabInstance:
   m_ObjectHideFlags: 0

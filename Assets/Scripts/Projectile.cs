@@ -58,4 +58,9 @@ public class Projectile : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void AssignEnemyLaser()
+    {
+        _isEnemyProjectile = true;
+    }
 }
