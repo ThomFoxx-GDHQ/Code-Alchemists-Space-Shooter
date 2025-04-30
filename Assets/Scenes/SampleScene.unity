@@ -2238,6 +2238,7 @@ MonoBehaviour:
   - {fileID: 3003267708087858936, guid: 281302e70c0466849b5c8cf6205e8eca, type: 3}
   - {fileID: 1547380999342278495, guid: 7880f9f6ed2aa3d448ff59a65a61952f, type: 3}
   - {fileID: 2246402203298762815, guid: c94f6c310ac694d46a76375c140bed24, type: 3}
+  _powerUpWeights: 0a00000008000000080000000f000000060000000a0000000a00000005000000
   _powerUpContainer: {fileID: 1406610322}
   _spawnXRange: {x: -10, y: 10}
   _topSpawnArea: 12
