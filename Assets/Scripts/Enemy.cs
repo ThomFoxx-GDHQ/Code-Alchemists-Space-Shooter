@@ -18,11 +18,27 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _explosionCoverUpDelay = .33f;
 
     [SerializeField] GameObject _enemyLaserPrefab;
+    [SerializeField] GameObject _shieldVisual;
+    bool _isShieldActive = false;
+
 
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
         StartCoroutine(FireLaserRoutine());
+
+        //Shield Activation
+        float rndShield = Random.value;
+        if (rndShield > 0.5f)
+        {
+            _isShieldActive = true;
+            _shieldVisual.SetActive(true);
+        }
+        else
+        {
+            _isShieldActive = false;
+            _shieldVisual.SetActive(false);
+        }
     }
 
     private void Update()
@@ -64,14 +80,26 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _player.Damage();
-            OnEnemyDeath();
+            if (!_isShieldActive)
+                OnEnemyDeath();
+            else
+            {
+                _isShieldActive = false;
+                _shieldVisual.SetActive(false);
+            }
         }
         if (other.CompareTag("Projectile"))
         {
             if (!other.GetComponent<Projectile>().IsEnemyProjectile)
             {
                 Destroy(other.gameObject);
-                OnEnemyDeath();
+                if (!_isShieldActive)
+                    OnEnemyDeath();
+                else
+                {
+                    _isShieldActive = false;
+                    _shieldVisual.SetActive(false);
+                }
             }
         }
     }
