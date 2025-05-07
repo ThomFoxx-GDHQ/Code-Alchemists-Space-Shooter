@@ -80,7 +80,7 @@ public class CirclingEnemy : MonoBehaviour
 
     void BoundRespawn()
     {
-        if (transform.position.y <= _bottomBound)
+        if (transform.position.y <= _bottomBound && _canRespawn != false)
         {
             float rndX = Random.Range(_leftBound, _rightBound);
             transform.position = new Vector3(rndX, _topBound, 0);

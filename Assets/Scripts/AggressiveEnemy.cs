@@ -14,10 +14,10 @@ public class AggressiveEnemy : MonoBehaviour
     [SerializeField] int _pointValue = 10;
     [SerializeField] GameObject _explosionPrefab;
     [SerializeField] float _explosionCoverUpDelay = .33f;
+    [SerializeField] float _explosionScale = 1;
 
     [SerializeField] Transform _model;
     Vector3 _lookAtTarget = Vector3.down;
-
 
     private void Start()
     {
@@ -26,33 +26,25 @@ public class AggressiveEnemy : MonoBehaviour
 
     private void Update()
     {
-        //if (Vector3.Distance(_player.transform.position, transform.position) < 10)
-            //LookAt(_player.transform);
-        //else
-        //   LookAt(transform.position - _lookAtTarget);
-
-        _model.transform.LookAt(_player.transform.position, Vector3.back);
-        _model.transform.Rotate(Vector3.forward, -90, Space.World);
-        CalculateMovement();
-    }
-
-
-
-    private void LookAt(Transform target)
-    {
-        Vector3 diff = target.position - transform.position;
-        diff.Normalize();
-        float rot = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        Vector3 rotation = _model.transform.rotation.eulerAngles;
-        rotation.x = rot;
-        _model.transform.rotation = Quaternion.Euler(rotation.x, rotation.y, rotation.z);
+        if (Vector3.Distance(_player.transform.position, transform.position) < 10)
+        {
+            _model.transform.LookAt(_player.transform.position, Vector3.back);
+            _model.transform.Rotate(Vector3.forward, -90, Space.World);
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, (_speed * 2 * Time.deltaTime));
+        }
+        else
+        {
+            _model.transform.LookAt(transform.position + _lookAtTarget, Vector3.back);
+            _model.transform.Rotate(Vector3.forward, -90, Space.World);
+            CalculateMovement();
+        }
     }
 
     private void CalculateMovement()
     {
-        transform.Translate(Vector3.down *(_speed*Time.deltaTime));
+        transform.Translate(Vector3.down * (_speed * Time.deltaTime));
 
-        if (transform.position.y < _bottomBound)
+        if (transform.position.y < _bottomBound && _canRespawn != false)
         {
             float rndX = Random.Range(_leftBound, _rightBound);
             transform.position = new Vector3(rndX, _topBound, 0);
@@ -81,9 +73,14 @@ public class AggressiveEnemy : MonoBehaviour
         SpawnManager.Instance.OnEnemyDeath();
 
         _player.AddScore(_pointValue);
-        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        GameObject go = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        go.transform.localScale = Vector3.one * _explosionScale;
         _speed = 0;
-        GetComponent<Collider>().enabled = false;
+        var colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
 
         //Always last in this method.
         Destroy(this.gameObject, _explosionCoverUpDelay);
