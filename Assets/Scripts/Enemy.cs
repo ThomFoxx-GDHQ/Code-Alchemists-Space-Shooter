@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject _shieldVisual;
     bool _isShieldActive = false;
 
+    Sides _dodgeDirection;
+    bool _isDodging;
+    [SerializeField] float _dodgeTime;
 
     private void Start()
     {
@@ -47,7 +50,12 @@ public class Enemy : MonoBehaviour
 
     private void CalculateMovement()
     {
-        transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+        if (_isDodging)
+            transform.Translate(Vector3.right * ((int)_dodgeDirection * _speed * Time.deltaTime));        
+        else
+            transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+
+
         if (transform.position.y < _bottomBound && _canRespawn)
         {
             Respawn();
@@ -119,5 +127,26 @@ public class Enemy : MonoBehaviour
     public void OnPlayerDeath()
     {
         _canRespawn = false;
+    }
+
+    public void FireAtPowerUp()
+    {
+        Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+    }
+
+    public void DodgeFire(Sides dodgeDirection)
+    {
+        if (_isDodging == false)
+        {        
+            _dodgeDirection = dodgeDirection;
+            _isDodging = true;
+            StartCoroutine(DodgeTimeRoutine());
+        }
+    }
+
+    IEnumerator DodgeTimeRoutine()
+    {
+        yield return new WaitForSeconds(_dodgeTime);
+        _isDodging = false;
     }
 }

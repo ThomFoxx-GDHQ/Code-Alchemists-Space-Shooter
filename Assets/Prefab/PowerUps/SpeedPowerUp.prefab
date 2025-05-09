@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3439558783096513232}
   - component: {fileID: 3215888929240739783}
   - component: {fileID: -3188683406287857428}
+  - component: {fileID: -7702536548488863103}
   m_Layer: 0
   m_Name: SpeedPowerUp
   m_TagString: Untagged
@@ -97,6 +98,7 @@ MonoBehaviour:
   _bottomBounds: -12
   _powerUpID: 2
   _clip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _powerupAmount: 5
 --- !u!82 &-3188683406287857428
 AudioSource:
   m_ObjectHideFlags: 0
@@ -194,6 +196,33 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!54 &-7702536548488863103
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2521268824590519818}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1529246560558312343
 PrefabInstance:
   m_ObjectHideFlags: 0

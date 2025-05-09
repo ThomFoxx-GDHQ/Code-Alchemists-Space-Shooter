@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94abd8f60ce506a4ca90ced85006470b, type: 3}
   m_Name: Wave4Spawns
   m_EditorClassIdentifier: 
-  spawnWeights: 19000000190000001900000019000000
+  spawnWeights: 1400000014000000140000001400000014000000

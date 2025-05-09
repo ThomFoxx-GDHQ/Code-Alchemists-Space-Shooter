@@ -9,6 +9,13 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private AudioClip _clip;
     [SerializeField] private int _powerupAmount = 5;
 
+    Player _player;
+
+    private void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+    }
+
     private void Update()
     {
         CalculateMovement();
@@ -16,7 +23,11 @@ public class PowerUp : MonoBehaviour
 
     private void CalculateMovement()
     {
-        transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+        if (Input.GetKey(KeyCode.C))
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, (_speed * 2 * Time.deltaTime));
+        else
+            transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+        
         if (transform.position.y <= _bottomBounds)
             Destroy(this.gameObject);
     }
@@ -61,6 +72,16 @@ public class PowerUp : MonoBehaviour
             }
 
             OnCollect();
+        }
+
+        if (other.CompareTag("Projectile"))
+        {
+            Projectile projectile = other.GetComponent<Projectile>();
+            if (projectile.IsEnemyProjectile == true)
+            {
+                Destroy(projectile.gameObject);
+                Destroy(this.gameObject);
+            }
         }
     }
 

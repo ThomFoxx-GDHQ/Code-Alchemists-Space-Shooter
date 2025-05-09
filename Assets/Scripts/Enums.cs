@@ -19,10 +19,8 @@ public enum FireType
     StarBurter
 }
 
-public enum Directions
+public enum Sides
 {
-    North,
-    East,
-    South,
-    West
+   Left = -1,
+   Right = 1
 }

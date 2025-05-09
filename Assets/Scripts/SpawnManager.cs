@@ -106,11 +106,11 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator PowerupSpawnRoutine()
     {
-        while(_canSpawn && _waveCount < _finalWave)
+        while (_canSpawn && _waveCount < _finalWave)
         {
+            yield return new WaitForSeconds(5f);
             while (_currentEnemies > 0)
             {
-                yield return new WaitForSeconds(5f);
 
                 float randomX = Random.Range(_spawnXRange.x, _spawnXRange.y);
                 int randomPowerUp = PowerupPicker();
