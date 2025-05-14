@@ -16,7 +16,8 @@ public enum FireType
     Regular,
     QuadShot,
     GaitlingGun,
-    StarBurter
+    StarBurter,
+    HomingMissile
 }
 
 public enum Sides

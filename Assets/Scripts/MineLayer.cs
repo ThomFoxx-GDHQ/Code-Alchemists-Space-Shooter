@@ -81,7 +81,7 @@ public class MineLayer : MonoBehaviour
         }
         if (other.CompareTag("Projectile"))
         {
-            if (!other.GetComponent<Projectile>().IsEnemyProjectile)
+            if (!other.GetComponent<IProjectile>().IsEnemyProjectile())
             {
                 Destroy(other.gameObject);
 

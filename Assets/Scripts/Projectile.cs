@@ -1,7 +1,7 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IProjectile
 {
     [SerializeField] float _speed = 5f;
     [SerializeField] bool _isEnemyProjectile;
@@ -17,9 +17,9 @@ public class Projectile : MonoBehaviour
         //Debug.Break();
     }
 
-    public bool IsEnemyProjectile
+    public bool IsEnemyProjectile()
     {
-        get { return _isEnemyProjectile; }
+        return _isEnemyProjectile;
     }
 
     private void Update()

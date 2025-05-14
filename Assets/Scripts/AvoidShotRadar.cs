@@ -13,14 +13,13 @@ public class AvoidShotRadar : MonoBehaviour
         if (other.CompareTag("Projectile") && _canDetect)
         {
             Projectile laser = other.GetComponent<Projectile>();
-            if (laser != null && !laser.IsEnemyProjectile)
+            if (laser != null && !laser.IsEnemyProjectile())
             {            
                 _parentBody.DodgeFire(_moveDirection);
                 StartCoroutine(DetectionCoolDownRoutine());
             }
         }
     }
-
 
     IEnumerator DetectionCoolDownRoutine()
     {

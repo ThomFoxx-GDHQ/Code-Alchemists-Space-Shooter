@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _laserAudioClip;
     [SerializeField] private int _maxAmmoCount = 30;
     int _ammoCount = 15;
-    FireType _fireType = FireType.Regular;
+    [SerializeField] FireType _fireType = FireType.Regular;
 
     [Header("Quad Shot Settings")]
     [SerializeField] GameObject _quadshotPreab;
@@ -45,6 +45,9 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _starBursterPrefab;
     [SerializeField] float _starBursterFireRate = 5f;
     bool _isStarBursterActive;
+
+    [Header("Homing Missile Settings")]
+    [SerializeField] GameObject _homingMissilePrefab;
 
     private SpawnManager _spawnManager;
 
@@ -203,6 +206,9 @@ public class Player : MonoBehaviour
                 case FireType.StarBurter:
                     Instantiate(_starBursterPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
                     break;
+                case FireType.HomingMissile:
+                    HomingMissileFire();
+                    break;
                 default:
                     break;
             }            
@@ -239,6 +245,35 @@ public class Player : MonoBehaviour
                 _whenCanFire = Time.time + _fireRate;
                 break;
         }        
+    }
+
+    private void HomingMissileFire()
+    {
+        //spawn in the missile
+        GameObject missile = Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity);
+        // search the scene for enemies
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if (enemies.Length > 0)
+        {
+            // determine which closest
+            Transform closest = null;
+            float closestDistance = Mathf.Infinity;
+            foreach (GameObject enemy in enemies)
+            {
+                float distance = Vector3.Distance(enemy.transform.position, transform.position);
+                if (closestDistance > distance)
+                {
+                    closestDistance = distance;
+                    closest = enemy.transform;
+                }
+            }
+            Debug.Log($"Closest enemy is {closest.name}", closest.gameObject);
+            //assign closest to Missile
+            missile.GetComponent<HomingMissile>()?.AssignTarget(closest);
+        }
+
+        //rotate Missile
+        missile.transform.LookAt(transform.position + Vector3.up);
     }
 
     public void Damage()

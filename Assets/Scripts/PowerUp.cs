@@ -76,10 +76,10 @@ public class PowerUp : MonoBehaviour
 
         if (other.CompareTag("Projectile"))
         {
-            Projectile projectile = other.GetComponent<Projectile>();
-            if (projectile.IsEnemyProjectile == true)
+            IProjectile projectile = other.GetComponent<IProjectile>();
+            if (projectile.IsEnemyProjectile() == true)
             {
-                Destroy(projectile.gameObject);
+                Destroy(other.gameObject);
                 Destroy(this.gameObject);
             }
         }
