@@ -48,6 +48,8 @@ public class Player : MonoBehaviour
 
     [Header("Homing Missile Settings")]
     [SerializeField] GameObject _homingMissilePrefab;
+    int _homingMissileCounter = 0;
+    [SerializeField] float _missileFireRate = 5;
 
     private SpawnManager _spawnManager;
 
@@ -207,11 +209,15 @@ public class Player : MonoBehaviour
                     Instantiate(_starBursterPrefab, transform.position + _laserOffset, Quaternion.identity, _laserContainer);
                     break;
                 case FireType.HomingMissile:
-                    HomingMissileFire();
+                    if (_homingMissileCounter >= 1)
+                        HomingMissileFire();
+
+                    if (_homingMissileCounter <= 0)
+                        _fireType = FireType.Regular;
                     break;
                 default:
                     break;
-            }            
+            }
 
             AudioManager.Instance.PlaySoundAtPlayer(_laserAudioClip);
             if (_isGatlingActive == false)
@@ -240,6 +246,9 @@ public class Player : MonoBehaviour
                 break;
             case FireType.StarBurter:
                 _whenCanFire = Time.time + _starBursterFireRate;
+                break;
+            case FireType.HomingMissile:
+                _whenCanFire = Time.time + _missileFireRate;
                 break;
             default:
                 _whenCanFire = Time.time + _fireRate;
@@ -274,6 +283,8 @@ public class Player : MonoBehaviour
 
         //rotate Missile
         missile.transform.LookAt(transform.position + Vector3.up);
+
+        _homingMissileCounter--;
     }
 
     public void Damage()
@@ -465,5 +476,11 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         _jammedControlsMultiplier = 1;
+    }
+
+    public void AddMissiles()
+    {
+        _homingMissileCounter += 5;
+        _fireType = FireType.HomingMissile;
     }
 }

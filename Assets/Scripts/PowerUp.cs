@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float _speed = 5f;
@@ -66,6 +65,9 @@ public class PowerUp : MonoBehaviour
                     break;
                 case PowerUpType.ControlJam:
                     player.ActivateJammedControls();
+                    break;
+                case PowerUpType.HomingMissile:
+                    player.AddMissiles();
                     break;
                 default:
                     break;
