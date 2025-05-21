@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour, IProjectile
             Destroy(this.gameObject);
         }
 
-        if (Mathf.Abs(transform.position.y) > 10)
+        if (Mathf.Abs(transform.position.y) > 15)
         {
             if (!transform.parent.CompareTag("Container"))
                 Destroy(transform.parent.gameObject);
@@ -54,6 +54,7 @@ public class Projectile : MonoBehaviour, IProjectile
     {
         if (other.CompareTag("Player") && _isEnemyProjectile == true)
         {
+            Debug.LogWarning("Hitting the Player?");
             other.GetComponent<Player>()?.Damage();
             Destroy(this.gameObject);
         }
