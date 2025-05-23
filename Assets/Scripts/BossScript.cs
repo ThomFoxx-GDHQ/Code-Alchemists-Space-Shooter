@@ -9,7 +9,9 @@ public class BossScript : MonoBehaviour
         None,
         Entry,
         Idle,
-        Attack
+        Attack,
+        Escape,
+        Death
     }
 
     enum AttackStates
@@ -21,6 +23,7 @@ public class BossScript : MonoBehaviour
 
 
     GameObject _player;
+    [SerializeField] GameObject _model;
     private BossStates _currentState;
     private AttackStates _currentAttackPhase;
     [SerializeField] float _speed = 2.5f;
@@ -31,11 +34,18 @@ public class BossScript : MonoBehaviour
     Vector2 _shieldScale;
     bool _isShieldActive;
     int _shieldHealth;
+    [SerializeField] int _defaultShieldHealth = 3;
 
     Coroutine _shieldCoroutine;
 
     [SerializeField] GameObject[] _turrets;
     [SerializeField] GameObject _turretLasersPrefab;
+    [SerializeField] float _turretFireRate = 2.5f;
+    float _fireRateTimer = 0;
+    int _turretHealth;
+    [SerializeField] int _turretDefaultHealth = 5;
+    int _direction = 1;
+    bool _isEscaping = false;
 
     private void Awake()
     {
@@ -48,6 +58,8 @@ public class BossScript : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player");
         _shieldScale = _shieldVisualizer.transform.localScale;
         _shieldVisualizer?.SetActive(false);
+        _turretHealth = _turretDefaultHealth;
+        _shieldHealth = _defaultShieldHealth;
     }
 
     private void Update()
@@ -66,8 +78,12 @@ public class BossScript : MonoBehaviour
             case BossStates.Attack:
                 AttackPhase1();
                 break;
-            default:
+            case BossStates.Escape:
+                EscapeRoutine();
                 break;
+            default:
+                return;
+                
         }
     }
 
@@ -76,6 +92,31 @@ public class BossScript : MonoBehaviour
         if (transform.position.y <= _entryStopPositionY)
             _currentState = BossStates.None;
         transform.Translate(Vector3.down*(_speed*Time.deltaTime), Space.World);
+    }
+
+    private void EscapeRoutine()
+    {
+        _isEscaping = true;
+        if (Mathf.Abs(transform.position.x) >= 42)
+        {
+            TurnAround();
+        }
+        
+        if (_isEscaping = false && Mathf.Abs(transform.position.x) <= .1f)
+        {
+            _currentState = BossStates.None;
+        }
+            transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
+    }
+
+    private void TurnAround()
+    {
+        Vector3 rotation = _model.transform.rotation.eulerAngles;
+        rotation.y += 180;
+        _model.transform.rotation = Quaternion.Euler(rotation);
+        _direction *= -1;
+        transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
+        _isEscaping = false;
     }
 
     private void BetweenPhases()
@@ -102,6 +143,7 @@ public class BossScript : MonoBehaviour
         }
         _shieldVisualizer.transform.localScale = _shieldScale;
         _shieldCoroutine = null;
+        _isShieldActive = true;
         _currentState = BossStates.Attack;
     }
 
@@ -122,9 +164,13 @@ public class BossScript : MonoBehaviour
 
     private void FireLaser(GameObject turret)
     {
-        Vector3 pos = turret.transform.position;
-        pos.z = 0;
-        Instantiate(_turretLasersPrefab, pos, turret.transform.rotation);
+        if (_fireRateTimer < Time.time)
+        {
+            Vector3 pos = turret.transform.position;
+            pos.z = 0;
+            Instantiate(_turretLasersPrefab, pos, turret.transform.rotation);
+            _fireRateTimer = Time.time + _turretFireRate;
+        }
     }
 
     private void AttackPhase1()
@@ -132,5 +178,49 @@ public class BossScript : MonoBehaviour
         _turrets[0].transform.LookAt(_player.transform.position, Vector3.back);
         _turrets[0].transform.Rotate(Vector3.forward, 90, Space.World);
         FireLaser(_turrets[0]);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Projectile"))
+        {
+            Projectile laser = other.GetComponent<Projectile>();
+            if (laser != null && laser.IsEnemyProjectile() == false)
+            {
+                Debug.Log($"{other.name} hit this and IsEnemyProjectile = {laser.IsEnemyProjectile()}", other.gameObject);
+                Damage();
+            }
+        }
+    }
+
+    private void Damage()
+    {
+        if (_isShieldActive)
+        {
+            _shieldHealth--;
+            if (_shieldHealth <= 0)
+            {
+                _isShieldActive = false;
+                _shieldVisualizer.SetActive(false);
+                Debug.Log("Shield turns off?");
+                _shieldHealth = _defaultShieldHealth;
+            }
+            _turrets[(int)_currentAttackPhase].GetComponent<Collider>().enabled = true;
+            return;
+        }
+
+        _turretHealth--;
+        if (_turretHealth <= 0)
+        {
+            if (_currentAttackPhase != AttackStates.Phase3)
+            {
+                _currentAttackPhase++;
+                _currentState = BossStates.Escape;
+            }
+            else
+            {
+                _currentState = BossStates.Death;
+            }
+        }
     }
 }
