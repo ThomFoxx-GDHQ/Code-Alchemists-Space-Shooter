@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class BossScript : MonoBehaviour
 {
@@ -46,6 +45,7 @@ public class BossScript : MonoBehaviour
     [SerializeField] int _turretDefaultHealth = 5;
     int _direction = 1;
     bool _isEscaping = false;
+    Coroutine _bossCoroutine;
 
     private void Awake()
     {
@@ -64,6 +64,7 @@ public class BossScript : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log($"CurrentPhase is :{_currentState.ToString()}");
         switch (_currentState)
         {
             case BossStates.None:
@@ -76,14 +77,21 @@ public class BossScript : MonoBehaviour
                 Idle();
                 break;
             case BossStates.Attack:
-                AttackPhase1();
+                AttackPhase(_currentAttackPhase);
                 break;
             case BossStates.Escape:
                 EscapeRoutine();
                 break;
+            case BossStates.Death:
+                if (_bossCoroutine != null)
+                {
+                    //Start Routine
+                }
+                else return;
+                break;
             default:
                 return;
-                
+
         }
     }
 
@@ -96,27 +104,37 @@ public class BossScript : MonoBehaviour
 
     private void EscapeRoutine()
     {
-        _isEscaping = true;
-        if (Mathf.Abs(transform.position.x) >= 42)
+        
+        if (_isEscaping && Mathf.Abs(transform.position.x) >= 42)
         {
             TurnAround();
         }
-        
-        if (_isEscaping = false && Mathf.Abs(transform.position.x) <= .1f)
+        else
+        {
+            transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
+        }
+
+        if (_isEscaping == false && Mathf.Abs(transform.position.x) <= 1f)
         {
             _currentState = BossStates.None;
         }
-            transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
     }
 
     private void TurnAround()
     {
-        Vector3 rotation = _model.transform.rotation.eulerAngles;
-        rotation.y += 180;
-        _model.transform.rotation = Quaternion.Euler(rotation);
-        _direction *= -1;
-        transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
+        //Debug.Log($"Turn Around Called on {_model.name}: {_model.transform.rotation.eulerAngles}");
         _isEscaping = false;
+        //Vector3 rotation = _model.transform.rotation.eulerAngles;
+        //rotation.x += 180;
+        //_model.transform.rotation = Quaternion.Euler(rotation);
+        _direction *= -1;
+
+        bool facingLeft = _direction < 0;
+
+        _model.GetComponent<Animator>()?.SetBool("FaceLeft", facingLeft);
+
+        transform.Translate(Vector3.right * (_direction * _speed * Time.deltaTime), Space.World);
+        //Debug.Log($"Turn Around Completedon {_model.name}: {_model.transform.rotation.eulerAngles}");
     }
 
     private void BetweenPhases()
@@ -173,11 +191,11 @@ public class BossScript : MonoBehaviour
         }
     }
 
-    private void AttackPhase1()
+    private void AttackPhase(AttackStates state)
     {
-        _turrets[0].transform.LookAt(_player.transform.position, Vector3.back);
-        _turrets[0].transform.Rotate(Vector3.forward, 90, Space.World);
-        FireLaser(_turrets[0]);
+        _turrets[(int)state].transform.LookAt(_player.transform.position, Vector3.back);
+        _turrets[(int)state].transform.Rotate(Vector3.forward, 90, Space.World);
+        FireLaser(_turrets[(int)state]);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -187,7 +205,7 @@ public class BossScript : MonoBehaviour
             Projectile laser = other.GetComponent<Projectile>();
             if (laser != null && laser.IsEnemyProjectile() == false)
             {
-                Debug.Log($"{other.name} hit this and IsEnemyProjectile = {laser.IsEnemyProjectile()}", other.gameObject);
+                //Debug.Log($"{other.name} hit this and IsEnemyProjectile = {laser.IsEnemyProjectile()}", other.gameObject);
                 Damage();
             }
         }
@@ -202,7 +220,7 @@ public class BossScript : MonoBehaviour
             {
                 _isShieldActive = false;
                 _shieldVisualizer.SetActive(false);
-                Debug.Log("Shield turns off?");
+                //Debug.Log("Shield turns off?");
                 _shieldHealth = _defaultShieldHealth;
             }
             _turrets[(int)_currentAttackPhase].GetComponent<Collider>().enabled = true;
@@ -214,13 +232,32 @@ public class BossScript : MonoBehaviour
         {
             if (_currentAttackPhase != AttackStates.Phase3)
             {
-                _currentAttackPhase++;
+                _isEscaping = true;
+                _currentAttackPhase = ChangeState(_currentAttackPhase);
                 _currentState = BossStates.Escape;
             }
             else
             {
                 _currentState = BossStates.Death;
             }
+        }
+    }
+
+    private AttackStates ChangeState(AttackStates currentState)
+    {
+        switch (currentState)
+        {
+            case AttackStates.Phase1:
+                return AttackStates.Phase2;
+                
+            case AttackStates.Phase2:
+                return AttackStates.Phase3;
+                
+            case AttackStates.Phase3:
+                return AttackStates.Phase1;
+
+            default:
+                return currentState;                
         }
     }
 }
