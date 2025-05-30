@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform _laserContainer;
     [SerializeField] private AudioClip _laserAudioClip;
     [SerializeField] private int _maxAmmoCount = 30;
-    int _ammoCount = 15;
+    int _ammoCount = 50;
     [SerializeField] FireType _fireType = FireType.Regular;
 
     [Header("Quad Shot Settings")]

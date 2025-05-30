@@ -46,6 +46,8 @@ public class BossScript : MonoBehaviour
     int _direction = 1;
     bool _isEscaping = false;
     Coroutine _bossCoroutine;
+    [SerializeField] GameObject _explosionPrefab;
+    [SerializeField] Transform[] _explosionPoints;
 
     private void Awake()
     {
@@ -83,9 +85,9 @@ public class BossScript : MonoBehaviour
                 EscapeRoutine();
                 break;
             case BossStates.Death:
-                if (_bossCoroutine != null)
+                if (_bossCoroutine == null)
                 {
-                    //Start Routine
+                    _bossCoroutine = StartCoroutine(BossDeathRoutine());
                 }
                 else return;
                 break;
@@ -160,9 +162,30 @@ public class BossScript : MonoBehaviour
             yield return null;
         }
         _shieldVisualizer.transform.localScale = _shieldScale;
-        _shieldCoroutine = null;
         _isShieldActive = true;
         _currentState = BossStates.Attack;
+        _turretHealth = _turretDefaultHealth;
+        _shieldCoroutine = null;
+    }
+
+    IEnumerator BossDeathRoutine()
+    {
+        Debug.Log("Death Routine Started");
+        foreach (Transform t in _explosionPoints)
+        {
+            Debug.Log("Explosion");
+            Instantiate(_explosionPrefab,t.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
+        }
+        yield return null;
+
+        while (transform.position.x < 42)
+        {
+            Debug.Log("leaving");
+            transform.Translate(Vector3.right * ( _speed * Time.deltaTime), Space.World);
+            yield return null;
+        }
+        UIManager.Instance.GameOver();
     }
 
     private void Idle()
@@ -200,7 +223,7 @@ public class BossScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Projectile"))
+        if (other.CompareTag("Projectile") && _turretHealth > 0)
         {
             Projectile laser = other.GetComponent<Projectile>();
             if (laser != null && laser.IsEnemyProjectile() == false)
@@ -227,9 +250,14 @@ public class BossScript : MonoBehaviour
             return;
         }
 
-        _turretHealth--;
+        if (_turretHealth > 0)
+            _turretHealth--;
+        
         if (_turretHealth <= 0)
         {
+            _turrets[(int)_currentAttackPhase].gameObject.SetActive(false);
+            Instantiate(_explosionPrefab, _turrets[(int)_currentAttackPhase].transform.position,Quaternion.identity);
+
             if (_currentAttackPhase != AttackStates.Phase3)
             {
                 _isEscaping = true;

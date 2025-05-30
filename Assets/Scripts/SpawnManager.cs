@@ -39,6 +39,9 @@ public class SpawnManager : MonoBehaviour
     private int _spawnedEnemies = 0;
     [SerializeField] private int _finalWave = 5;
 
+    [SerializeField] GameObject _bossPrefab;
+    [SerializeField] Vector3 _bossSpawnLocation;
+
     private void Awake()
     {
         if (_instance == null)
@@ -74,7 +77,7 @@ public class SpawnManager : MonoBehaviour
         {
             //Debug.Log("Start Wave");
             _waveCount++;
-            _enemiesInWave = _waveCount * 10;
+            _enemiesInWave = _waveCount * 1;
             UIManager.Instance.UpdateWaveBanner(_waveCount);
 
             _enemySpawnPercentage = _enemySpawns[_waveCount - 1].SpawnRates();
@@ -102,11 +105,14 @@ public class SpawnManager : MonoBehaviour
                 yield return null;
             }
         }
+
+        if (_waveCount == _finalWave)
+            Instantiate(_bossPrefab);
     }
 
     IEnumerator PowerupSpawnRoutine()
     {
-        while (_canSpawn && _waveCount < _finalWave)
+        while (_canSpawn && _waveCount <= _finalWave)
         {
             yield return new WaitForSeconds(5f);
             while (_currentEnemies > 0)
