@@ -188,6 +188,11 @@ MonoBehaviour:
   _rightBounds: 22
   _upperBounds: 9
   _lowerBounds: -3
+  _screenBounds:
+    top: 9
+    bottom: -3
+    left: -22
+    right: 22
   _firingPoint: {fileID: 1506338818551624273}
   _laserPrefab: {fileID: 455228414595634650, guid: f96dbcc56b9c15b45a1bf58ccd627d62, type: 3}
   _laserOffset: {x: 0, y: -0.728, z: 0}

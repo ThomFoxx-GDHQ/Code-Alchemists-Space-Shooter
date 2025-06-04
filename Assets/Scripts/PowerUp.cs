@@ -12,7 +12,7 @@ public class PowerUp : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+        _player = GameManager.Instance.Player;
     }
 
     private void Update()

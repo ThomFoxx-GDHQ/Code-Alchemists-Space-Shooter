@@ -57,7 +57,7 @@ public class BossScript : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
+        _player = GameManager.Instance.Player.gameObject;
         _shieldScale = _shieldVisualizer.transform.localScale;
         _shieldVisualizer?.SetActive(false);
         _turretHealth = _turretDefaultHealth;

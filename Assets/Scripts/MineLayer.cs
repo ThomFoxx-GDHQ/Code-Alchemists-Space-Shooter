@@ -4,11 +4,8 @@ using UnityEngine;
 public class MineLayer : MonoBehaviour
 {
     [SerializeField] float _speed = 5;
-    [Header("Screenplay Boundaries")]
-    [SerializeField] float _leftBound;
-    [SerializeField] float _rightBound;
-    [SerializeField] float _topBound;
-    [SerializeField] float _bottomBound;
+    [Header("Screenplay Boundaries")]   
+    EnemyScreenBounds _screenBounds;
 
     private bool _canRespawn = true;
     private Player _player;
@@ -22,7 +19,8 @@ public class MineLayer : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Player>();
+        _player = GameManager.Instance.Player;
+        _screenBounds = GameManager.Instance.Bounds;
         StartCoroutine(FireLaserRoutine());
 
         //Shield Activation
@@ -38,11 +36,11 @@ public class MineLayer : MonoBehaviour
     private void CalculateMovement()
     {
         transform.Translate(Vector3.down * (_speed * Time.deltaTime));
-        if (transform.position.y < _bottomBound && _canRespawn)
+        if (transform.position.y < _screenBounds.bottom && _canRespawn)
         {
             Respawn();
         }
-        else if (transform.position.y < _bottomBound && _canRespawn == false)
+        else if (transform.position.y < _screenBounds.bottom && _canRespawn == false)
         {
             Destroy(this.gameObject);
         }
@@ -50,8 +48,8 @@ public class MineLayer : MonoBehaviour
 
     private void Respawn()
     {
-        float rng = Random.Range(_leftBound, _rightBound);
-        transform.position = new Vector3(rng, _topBound, 0);
+        float rng = Random.Range(_screenBounds.left,_screenBounds.right);
+        transform.position = new Vector3(rng, _screenBounds.top, 0);
     }
 
     IEnumerator FireLaserRoutine()

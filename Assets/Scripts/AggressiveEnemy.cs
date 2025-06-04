@@ -4,10 +4,7 @@ public class AggressiveEnemy : MonoBehaviour
 {
     [SerializeField] float _speed = 5;
     [Header("Screenplay Boundaries")]
-    [SerializeField] float _leftBound;
-    [SerializeField] float _rightBound;
-    [SerializeField] float _topBound;
-    [SerializeField] float _bottomBound;
+    EnemyScreenBounds _screenBounds;
 
     private bool _canRespawn = true;
     private Player _player;
@@ -21,7 +18,8 @@ public class AggressiveEnemy : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        _player = GameManager.Instance.Player;
+        _screenBounds = GameManager.Instance.Bounds;
     }
 
     private void Update()
@@ -44,10 +42,10 @@ public class AggressiveEnemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * (_speed * Time.deltaTime));
 
-        if (transform.position.y < _bottomBound && _canRespawn != false)
+        if (transform.position.y < _screenBounds.bottom && _canRespawn != false)
         {
-            float rndX = Random.Range(_leftBound, _rightBound);
-            transform.position = new Vector3(rndX, _topBound, 0);
+            float rndX = Random.Range(_screenBounds.left, _screenBounds.right);
+            transform.position = new Vector3(rndX, _screenBounds.top, 0);
         }
     }
 

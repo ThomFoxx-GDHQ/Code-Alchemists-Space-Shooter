@@ -6,10 +6,7 @@ public class SidewaysEnemy : MonoBehaviour
     [SerializeField] float _speed = 5f;
 
     [Header("Screen Boundaries")]
-    [SerializeField] float _leftBounds;
-    [SerializeField] float _rightBounds;
-    [SerializeField] float _upperBounds;
-    [SerializeField] float _lowerBounds;
+    [SerializeField] EnemyScreenBounds _screenBounds;
 
     int _directionMultiplier = 1;
 
@@ -30,13 +27,14 @@ public class SidewaysEnemy : MonoBehaviour
     {
         ResetSpawn();
         _laserContainer = GameObject.Find("LaserContainer")?.transform;
-        _player = GameObject.FindGameObjectWithTag("Player");
+        _player = GameManager.Instance.Player.gameObject;
     }
 
     private void ResetSpawn()
     {
-        float rndY = Random.Range(_lowerBounds, _upperBounds);
-        transform.position = new Vector3(_leftBounds+.05f, rndY, 0);
+        float rndY = Random.Range(_screenBounds.bottom, _screenBounds.top);
+
+        transform.position = new Vector3(_screenBounds.left+.05f, rndY, 0);
     }
 
     private void Update()
@@ -50,13 +48,13 @@ public class SidewaysEnemy : MonoBehaviour
     private void CalculateMovement()
     {
         transform.Translate(Vector3.right * (_directionMultiplier * _speed * Time.deltaTime));
-        if (transform.position.x < _leftBounds || transform.position.x > _rightBounds)
+        if (transform.position.x < _screenBounds.left || transform.position.x > _screenBounds.right)
         {
             //Change Direction
             _directionMultiplier *= -1;
             transform.localScale = new Vector3(_directionMultiplier, 1, 1);
             //Change vertical position
-            float rngY = Random.Range(_lowerBounds, _upperBounds);
+            float rngY = Random.Range(_screenBounds.bottom, _screenBounds.top);
             transform.position = new Vector3(transform.position.x, rngY, 0);
         }
     }

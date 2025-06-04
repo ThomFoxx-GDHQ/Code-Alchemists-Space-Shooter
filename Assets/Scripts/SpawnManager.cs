@@ -52,10 +52,13 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
+        PowerUpPercentCalaculation();
+    }
+
+    public void StartSpawning()
+    {
         StartCoroutine(EnemySpawnRoutine());
         StartCoroutine(PowerupSpawnRoutine());
-
-        PowerUpPercentCalaculation();
     }
 
     private void PowerUpPercentCalaculation()
@@ -77,7 +80,7 @@ public class SpawnManager : MonoBehaviour
         {
             //Debug.Log("Start Wave");
             _waveCount++;
-            _enemiesInWave = _waveCount * 1;
+            _enemiesInWave = _waveCount * 5;
             UIManager.Instance.UpdateWaveBanner(_waveCount);
 
             _enemySpawnPercentage = _enemySpawns[_waveCount - 1].SpawnRates();
