@@ -42,6 +42,11 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] GameObject _bossPrefab;
     [SerializeField] Vector3 _bossSpawnLocation;
 
+    WaitForSeconds _shortWait;
+    WaitForSeconds _midWait;
+    [SerializeField] float _shortWaitTime = 2;
+    [SerializeField] float _midWaitTime = 5;
+
     private void Awake()
     {
         if (_instance == null)
@@ -53,6 +58,8 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         PowerUpPercentCalaculation();
+        _shortWait = new WaitForSeconds(_shortWaitTime);
+        _midWait = new WaitForSeconds(_midWaitTime);
     }
 
     public void StartSpawning()
@@ -85,7 +92,7 @@ public class SpawnManager : MonoBehaviour
 
             _enemySpawnPercentage = _enemySpawns[_waveCount - 1].SpawnRates();
 
-            yield return new WaitForSeconds(5f);
+            yield return _midWait;
 
             //counts for in the wave
             _currentEnemies = 0;
@@ -99,7 +106,7 @@ public class SpawnManager : MonoBehaviour
 
                 _spawnedEnemies++;
                 _currentEnemies++;
-                yield return new WaitForSeconds(2);
+                yield return _shortWait;
             }
 
             while (_currentEnemies > 0)
@@ -115,9 +122,9 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator PowerupSpawnRoutine()
     {
-        while (_canSpawn && _waveCount <= _finalWave)
+        while (_canSpawn)
         {
-            yield return new WaitForSeconds(5f);
+            yield return _midWait;
             while (_currentEnemies > 0)
             {
 
@@ -125,7 +132,7 @@ public class SpawnManager : MonoBehaviour
                 int randomPowerUp = PowerupPicker();
 
                 Instantiate(_powerUpPrefabs[randomPowerUp], new Vector3(randomX, _topSpawnArea, 0), Quaternion.identity, _powerUpContainer);
-                yield return new WaitForSeconds(2);
+                yield return _shortWait;
             }
             yield return null;
         }

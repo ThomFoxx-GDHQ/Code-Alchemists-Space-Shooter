@@ -35,7 +35,7 @@ public class PowerUp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();            
+                        
 
             switch (_powerUpID)
             {
@@ -43,31 +43,31 @@ public class PowerUp : MonoBehaviour
                     Debug.Log("No PowerUp to to this Item!");
                     break;
                 case PowerUpType.QuadShot:
-                    player.ActivateQuadShot();
+                    _player.ActivateQuadShot();
                     break;
                 case PowerUpType.SpeedBoost:
-                    player.ActivateSpeedBoost();
+                    _player.ActivateSpeedBoost();
                     break;
                 case PowerUpType.Shield:
-                    player.ShieldActive(true, 99);
+                    _player.ShieldActive(true, 99);
                     break;
                 case PowerUpType.Ammo:
-                    player.AddAmmo(_powerupAmount);
+                    _player.AddAmmo(_powerupAmount);
                     break;
                 case PowerUpType.Repair:
-                    player.AddHealth();
+                    _player.AddHealth();
                     break;
                 case PowerUpType.GatlingGun:
-                    player.ActivateGatlingGun();
+                    _player.ActivateGatlingGun();
                     break;
                 case PowerUpType.Starburster:
-                    player.ActivateStarBurster();
+                    _player.ActivateStarBurster();
                     break;
                 case PowerUpType.ControlJam:
-                    player.ActivateJammedControls();
+                    _player.ActivateJammedControls();
                     break;
                 case PowerUpType.HomingMissile:
-                    player.AddMissiles();
+                    _player.AddMissiles();
                     break;
                 default:
                     break;

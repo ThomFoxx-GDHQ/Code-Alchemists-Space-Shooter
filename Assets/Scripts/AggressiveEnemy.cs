@@ -16,6 +16,9 @@ public class AggressiveEnemy : MonoBehaviour
     [SerializeField] Transform _model;
     Vector3 _lookAtTarget = Vector3.down;
 
+    float _rndX = 0;
+    Vector2 _newPOS = Vector2.zero;
+
     private void Start()
     {
         _player = GameManager.Instance.Player;
@@ -44,8 +47,10 @@ public class AggressiveEnemy : MonoBehaviour
 
         if (transform.position.y < _screenBounds.bottom && _canRespawn != false)
         {
-            float rndX = Random.Range(_screenBounds.left, _screenBounds.right);
-            transform.position = new Vector3(rndX, _screenBounds.top, 0);
+            _rndX = Random.Range(_screenBounds.left, _screenBounds.right);
+            _newPOS.x = _rndX;
+            _newPOS.y = _screenBounds.top;
+            transform.position = _newPOS;
         }
     }
 

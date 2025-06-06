@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -87,6 +86,19 @@ public class Player : MonoBehaviour
     [SerializeField] float _cameraShakeDuration = .5f;
     [SerializeField] float _cameraShakeIntensity = .5f;
 
+    WaitForSeconds _shortWait;
+    WaitForSeconds _midWait;
+    WaitForSeconds _longWait;
+    [SerializeField] float _shortWaitTime = 1f;
+    [SerializeField] float _midWaitTime = 5f;
+    [SerializeField] float _longWaitTime = 10f;
+
+    GameObject _missile;
+    GameObject[] _missileTargets;
+    Transform _closestMissileTarget;
+    float _closestMissileDist = Mathf.Infinity;
+    float _checkingDist;
+
     void Start()
     {
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
@@ -100,6 +112,9 @@ public class Player : MonoBehaviour
         UIManager.Instance.UpdateThruster(_engineHeat);
         UIManager.Instance.UpdateAmmoCount(_ammoCount);
 
+        _shortWait = new WaitForSeconds(_shortWaitTime);
+        _midWait = new WaitForSeconds(_midWaitTime);
+        _longWait = new WaitForSeconds(_longWaitTime);
     }
 
     void Update()
@@ -161,7 +176,10 @@ public class Player : MonoBehaviour
         // Get movement input from player
         _horizontalInput = Input.GetAxis("Horizontal");
         _verticalInput = Input.GetAxis("Vertical");
-        _direction = new Vector3(_horizontalInput, _verticalInput, 0);
+        //_direction = new Vector3(_horizontalInput, _verticalInput, 0);
+        _direction.x = _horizontalInput;
+        _direction.y = _verticalInput;
+        _direction.z = 0;
 
         // Move player based on input and speed
         transform.Translate(_direction * (_speed * _boostedMultiper * _thrustingMultiplier * Time.deltaTime) * _jammedControlsMultiplier);
@@ -259,30 +277,30 @@ public class Player : MonoBehaviour
     private void HomingMissileFire()
     {
         //spawn in the missile
-        GameObject missile = Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity);
+        _missile = Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity);
         // search the scene for enemies
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if (enemies.Length > 0)
+        _missileTargets = GameObject.FindGameObjectsWithTag("Enemy");
+        if (_missileTargets.Length > 0)
         {
             // determine which closest
-            Transform closest = null;
-            float closestDistance = Mathf.Infinity;
-            foreach (GameObject enemy in enemies)
+            _closestMissileTarget = null;
+            _closestMissileDist = Mathf.Infinity;
+            foreach (GameObject enemy in _missileTargets)
             {
-                float distance = Vector3.Distance(enemy.transform.position, transform.position);
-                if (closestDistance > distance)
+                _checkingDist = Vector3.Distance(enemy.transform.position, transform.position);
+                if (_closestMissileDist > _checkingDist)
                 {
-                    closestDistance = distance;
-                    closest = enemy.transform;
+                    _closestMissileDist = _checkingDist;
+                    _closestMissileTarget = enemy.transform;
                 }
             }
-            Debug.Log($"Closest enemy is {closest.name}", closest.gameObject);
+            //Debug.Log($"Closest enemy is {closest.name}", closest.gameObject);
             //assign closest to Missile
-            missile.GetComponent<HomingMissile>()?.AssignTarget(closest);
+            _missile.GetComponent<HomingMissile>()?.AssignTarget(_closestMissileTarget);
         }
 
         //rotate Missile
-        missile.transform.LookAt(transform.position + Vector3.up);
+        _missile.transform.LookAt(transform.position + Vector3.up);
 
         _homingMissileCounter--;
     }
@@ -353,7 +371,7 @@ public class Player : MonoBehaviour
 
     IEnumerator QuadShotPowerDownRoutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return _midWait;
         _fireType = FireType.Regular;
         _QuadPowerTimerRoutine = null;
     }
@@ -386,7 +404,7 @@ public class Player : MonoBehaviour
 
     IEnumerator SpeedBoostCountdownRoutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return _midWait;
         _boostedMultiper = 1;
         _SpeedBoostTimerRoutine = null;
     }
@@ -447,7 +465,7 @@ public class Player : MonoBehaviour
 
     IEnumerator GatlingShutdownRoutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return _midWait;
         _fireType = FireType.Regular;
     }
 
@@ -462,7 +480,7 @@ public class Player : MonoBehaviour
 
     IEnumerator StarBursterShutdownRoutine()
     {
-        yield return new WaitForSeconds(10f);
+        yield return _longWait;
         _fireType = FireType.Regular;
     }
 
@@ -474,7 +492,7 @@ public class Player : MonoBehaviour
 
     IEnumerator JammedControlsCooldownRoutine()
     {
-        yield return new WaitForSeconds(5);
+        yield return _midWait;
         _jammedControlsMultiplier = 1;
     }
 

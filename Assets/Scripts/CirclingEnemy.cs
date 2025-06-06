@@ -16,18 +16,22 @@ public class CirclingEnemy : MonoBehaviour
     bool _canRespawn = true;
 
     [Header("Screenplay Boundaries")]
-   EnemyScreenBounds _screenBounds;
+    EnemyScreenBounds _screenBounds;
 
     [Header("Circular Motion Stuff")]
     bool _startCircle = false;
     [SerializeField] float _angluarSpeed = 1f;
     [SerializeField] float _radius = 1f;
+    Vector2 _offset = Vector2.zero;
 
-    Vector2 _centerPoint = new Vector2();
+    Vector2 _centerPoint = Vector2.zero;
     float _currentAngle = 0;
 
     [SerializeField] float _maxTimer = 5f;
     Coroutine _circlingRoutine;
+
+    Vector3 _newPOS = Vector3.zero;
+    float _rndX = 0;
 
 
     private void Start()
@@ -60,15 +64,18 @@ public class CirclingEnemy : MonoBehaviour
         if (_startCircle)
         {
             _currentAngle += _angluarSpeed + Time.deltaTime;
-            Vector2 offset = new Vector2(Mathf.Sin(_currentAngle), Mathf.Cos(_currentAngle)) * _radius;
-            transform.position = _centerPoint + offset;
+            //Vector2 offset = new Vector2(Mathf.Sin(_currentAngle), Mathf.Cos(_currentAngle)) * _radius;
+            _offset.x = Mathf.Sin(_currentAngle);
+            _offset.y = Mathf.Cos(_currentAngle);
+            _offset *= _radius;
+            transform.position = _centerPoint + _offset;
         }
     }
 
     IEnumerator CircleTimerRoutine()
     {
         float timer = Random.Range(1, _maxTimer);
-        while (timer >0)
+        while (timer > 0)
         {
             yield return null;
             timer -= Time.deltaTime;
@@ -80,8 +87,11 @@ public class CirclingEnemy : MonoBehaviour
     {
         if (transform.position.y <= _screenBounds.bottom && _canRespawn != false)
         {
-            float rndX = Random.Range(_screenBounds.left, _screenBounds.right);
-            transform.position = new Vector3(rndX, _screenBounds.top, 0);
+            _rndX = Random.Range(_screenBounds.left, _screenBounds.right);
+            _newPOS.x = _rndX;
+            _newPOS.y = _screenBounds.top;
+            _newPOS.z = 0;
+            transform.position = _newPOS;
             _circlingRoutine = null;
             _currentAngle = 0;
         }

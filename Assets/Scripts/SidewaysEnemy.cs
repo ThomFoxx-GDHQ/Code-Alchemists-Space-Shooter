@@ -23,6 +23,10 @@ public class SidewaysEnemy : MonoBehaviour
     [SerializeField] GameObject _explosionPrefab;
     [SerializeField] float _explosionCoverUpDelay;
 
+    float _rndY = 0;
+    Vector2 _newPOS = Vector2.zero;
+    [SerializeField] float _spawnOffsetX = .05f;
+
     private void Start()
     {
         ResetSpawn();
@@ -32,9 +36,10 @@ public class SidewaysEnemy : MonoBehaviour
 
     private void ResetSpawn()
     {
-        float rndY = Random.Range(_screenBounds.bottom, _screenBounds.top);
-
-        transform.position = new Vector3(_screenBounds.left+.05f, rndY, 0);
+        _rndY = Random.Range(_screenBounds.bottom, _screenBounds.top);
+        _newPOS.y = _rndY;
+        _newPOS.x = _screenBounds.left + _spawnOffsetX;
+        transform.position = _newPOS;
     }
 
     private void Update()
@@ -54,8 +59,10 @@ public class SidewaysEnemy : MonoBehaviour
             _directionMultiplier *= -1;
             transform.localScale = new Vector3(_directionMultiplier, 1, 1);
             //Change vertical position
-            float rngY = Random.Range(_screenBounds.bottom, _screenBounds.top);
-            transform.position = new Vector3(transform.position.x, rngY, 0);
+            _rndY = Random.Range(_screenBounds.bottom, _screenBounds.top);
+            _newPOS.y = _rndY;
+            _newPOS.x = transform.position.x;
+            transform.position = _newPOS;
         }
     }
 

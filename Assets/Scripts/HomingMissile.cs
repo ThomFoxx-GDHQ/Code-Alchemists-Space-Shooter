@@ -6,6 +6,7 @@ public class HomingMissile : MonoBehaviour, IProjectile
     [SerializeField] private float _speed;
     [SerializeField] private float _targetDelay;
     private bool _isEnemyMissile = false;
+    private Transform _defaultTarget;
 
     public void AssignTarget(Transform target)
     {
@@ -24,14 +25,15 @@ public class HomingMissile : MonoBehaviour, IProjectile
 
     private void Awake()
     {
-        _target = GameObject.Find("DefaultMissileTarget").transform;
+        _defaultTarget = GameObject.Find("DefaultMissileTarget").transform;
+        _target = _defaultTarget;
         _targetDelay = _targetDelay + Time.time;
     }
 
     private void Update()
     {
         if (_target == null)
-            _target = GameObject.Find("DefaultMissileTarget").transform;
+            _target = _defaultTarget;
 
         transform.Translate(Vector3.forward * (_speed * Time.deltaTime), Space.Self);
 

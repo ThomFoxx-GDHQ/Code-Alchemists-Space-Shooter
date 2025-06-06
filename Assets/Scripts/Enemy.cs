@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
 
     Sides _dodgeDirection;
     bool _isDodging;
+    WaitForSeconds _dodgeWait;
     [SerializeField] float _dodgeTime;
 
     private void Start()
@@ -43,6 +44,7 @@ public class Enemy : MonoBehaviour
             _isShieldActive = false;
             _shieldVisual.SetActive(false);
         }
+        _dodgeWait = new WaitForSeconds(_dodgeTime);
     }
 
     private void Update()
@@ -148,7 +150,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator DodgeTimeRoutine()
     {
-        yield return new WaitForSeconds(_dodgeTime);
+        yield return _dodgeWait;
         _isDodging = false;
     }
 }

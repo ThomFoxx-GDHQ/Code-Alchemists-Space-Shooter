@@ -49,6 +49,9 @@ public class BossScript : MonoBehaviour
     [SerializeField] GameObject _explosionPrefab;
     [SerializeField] Transform[] _explosionPoints;
 
+    WaitForSeconds _shortWait;
+    [SerializeField] float _shortWaitTime = .5f;
+
     private void Awake()
     {
         _currentState = BossStates.Entry;
@@ -62,11 +65,12 @@ public class BossScript : MonoBehaviour
         _shieldVisualizer?.SetActive(false);
         _turretHealth = _turretDefaultHealth;
         _shieldHealth = _defaultShieldHealth;
+        _shortWait = new WaitForSeconds(_shortWaitTime);
     }
 
     private void Update()
     {
-        Debug.Log($"CurrentPhase is :{_currentState.ToString()}");
+        //Debug.Log($"CurrentPhase is :{_currentState.ToString()}");
         switch (_currentState)
         {
             case BossStates.None:
@@ -101,7 +105,7 @@ public class BossScript : MonoBehaviour
     {
         if (transform.position.y <= _entryStopPositionY)
             _currentState = BossStates.None;
-        transform.Translate(Vector3.down*(_speed*Time.deltaTime), Space.World);
+        transform.Translate(Vector3.down * (_speed * Time.deltaTime), Space.World);
     }
 
     private void EscapeRoutine()
@@ -175,7 +179,7 @@ public class BossScript : MonoBehaviour
         {
             Debug.Log("Explosion");
             Instantiate(_explosionPrefab,t.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
+            yield return _shortWait;
         }
         yield return null;
 

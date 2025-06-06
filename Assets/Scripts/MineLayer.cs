@@ -17,6 +17,9 @@ public class MineLayer : MonoBehaviour
     [SerializeField] float _mineDelayTime;
     float _canLayMine = 0;
 
+    float _rndX = 0;
+    Vector2 _newPOS = Vector2.zero;
+
     private void Start()
     {
         _player = GameManager.Instance.Player;
@@ -24,7 +27,7 @@ public class MineLayer : MonoBehaviour
         StartCoroutine(FireLaserRoutine());
 
         //Shield Activation
-        float rndShield = Random.value;
+        //float rndShield = Random.value;
 
     }
 
@@ -48,8 +51,10 @@ public class MineLayer : MonoBehaviour
 
     private void Respawn()
     {
-        float rng = Random.Range(_screenBounds.left,_screenBounds.right);
-        transform.position = new Vector3(rng, _screenBounds.top, 0);
+        _rndX = Random.Range(_screenBounds.left,_screenBounds.right);
+        _newPOS.x = _rndX;
+        _newPOS.y = _screenBounds.top;
+        transform.position = _newPOS;
     }
 
     IEnumerator FireLaserRoutine()

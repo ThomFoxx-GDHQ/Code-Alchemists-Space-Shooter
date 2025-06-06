@@ -2402,9 +2402,11 @@ MonoBehaviour:
   _spawnXRange: {x: -10, y: 10}
   _topSpawnArea: 12
   _gameManager: {fileID: 933523024}
-  _finalWave: 2
+  _finalWave: 4
   _bossPrefab: {fileID: 960279195037172683, guid: fda4aeb987de43741a2e2d2fbbb5ae9c, type: 3}
   _bossSpawnLocation: {x: 0, y: 25, z: 0}
+  _shortWaitTime: 2
+  _midWaitTime: 5
 --- !u!4 &933523022
 Transform:
   m_ObjectHideFlags: 0
@@ -2453,6 +2455,7 @@ MonoBehaviour:
   _waveText: {fileID: 351204096}
   _waveBannerText: {fileID: 834681533}
   _anim: {fileID: 303091451}
+  _gameOverWaitTime: 1.5
 --- !u!114 &933523024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2588,6 +2591,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 39c2d786fd89f634997483cbbbdf74a8, type: 3}
   _cameraShakeDuration: 0.5
   _cameraShakeIntensity: 0.5
+  _shortWaitTime: 1
+  _midWaitTime: 5
+  _longWaitTime: 10
 --- !u!54 &980577410
 Rigidbody:
   m_ObjectHideFlags: 0

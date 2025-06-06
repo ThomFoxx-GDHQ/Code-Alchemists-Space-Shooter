@@ -6,6 +6,12 @@ public class PickUpRadar : MonoBehaviour
     [SerializeField] Enemy _parentBody;
     [SerializeField] float _detectionDelay = 2.5f;
     bool _canDetect = true;
+    WaitForSeconds _detectionDelayWait;
+
+    private void Start()
+    {
+        _detectionDelayWait = new WaitForSeconds(_detectionDelay);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -21,7 +27,7 @@ public class PickUpRadar : MonoBehaviour
     IEnumerator DetectionCoolDownRoutine()
     {
         _canDetect = false;
-        yield return new WaitForSeconds(_detectionDelay);
+        yield return _detectionDelayWait;
         _canDetect = true;
     }
 }

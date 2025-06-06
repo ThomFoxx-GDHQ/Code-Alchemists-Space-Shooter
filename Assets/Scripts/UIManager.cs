@@ -31,6 +31,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Animator _anim;
 
+    WaitForSeconds _gameOverWait;
+    [SerializeField] float _gameOverWaitTime = 1.5f;
+
     private void Awake()
     {
         if (_instance == null)
@@ -45,6 +48,8 @@ public class UIManager : MonoBehaviour
         _restartText.SetActive(false);
         _waveBannerText.gameObject.SetActive(false);
         _waveText.gameObject.SetActive(false);
+
+        _gameOverWait = new WaitForSeconds(_gameOverWaitTime);
     }
 
     public void UpdateShieldUI(int health)
@@ -102,9 +107,9 @@ public class UIManager : MonoBehaviour
         {
             yield return null;
             _gameOverText.SetActive(true);
-            yield return new WaitForSeconds(1.5f);
+            yield return _gameOverWait;
             _gameOverText.SetActive(false);
-            yield return new WaitForSeconds(1.5f);
+            yield return _gameOverWait;
         }
     }
 
