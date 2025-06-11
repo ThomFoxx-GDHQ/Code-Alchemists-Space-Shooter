@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Public Access")]
     public Player Player => _player; 
     public EnemyScreenBounds Bounds => _bounds;
+    PlayerInputAction _inputActions;
 
     private void Awake()
     {
@@ -37,20 +38,37 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        _inputActions = new PlayerInputAction();
+        _inputActions.Player.Enable();
+        _inputActions.Player.Escape.performed += Escape_performed;
+        _inputActions.Player.Restart.performed += Restart_performed;
+
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    private void Update()
+    private void Restart_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (Input.GetKeyDown(KeyCode.R) && _isPlayerDead)
-        {
+        if (_isPlayerDead)
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
     }
+
+    private void Escape_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    // ### Legacy Input Manager Code ### //
+    //private void Update()
+    //{
+    //    //if (Input.GetKeyDown(KeyCode.R) && _isPlayerDead)
+    //    //{
+    //    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    //    //}
+    //    //if (Input.GetKeyDown(KeyCode.Escape))
+    //    //{
+    //    //    SceneManager.LoadScene("MainMenu");
+    //    //}
+    //}
 
     public void OnPlayerDeath()
     {

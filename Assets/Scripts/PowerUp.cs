@@ -9,10 +9,26 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private int _powerupAmount = 5;
 
     Player _player;
+    PlayerInputAction _inputAction;
+    bool _isBeingCalled = false;    
 
     private void Start()
     {
+        _inputAction = new PlayerInputAction();
+        _inputAction.Player.Enable();
+        _inputAction.Player.PowerUpCollect.started += PowerUpCollect_started;
+        _inputAction.Player.PowerUpCollect.canceled += PowerUpCollect_canceled;            
         _player = GameManager.Instance.Player;
+    }
+
+    private void PowerUpCollect_started(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        _isBeingCalled = true;
+    }
+
+    private void PowerUpCollect_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        _isBeingCalled = false;
     }
 
     private void Update()
@@ -22,7 +38,7 @@ public class PowerUp : MonoBehaviour
 
     private void CalculateMovement()
     {
-        if (Input.GetKey(KeyCode.C))
+        if (_isBeingCalled)
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, (_speed * 2 * Time.deltaTime));
         else
             transform.Translate(Vector3.down * (_speed * Time.deltaTime));
@@ -100,5 +116,12 @@ public class PowerUp : MonoBehaviour
 
         //Always Last in this Method
         Destroy(this.gameObject, .9f);
+    }
+
+    private void OnDisable()
+    {
+        _inputAction.Player.PowerUpCollect.started -= PowerUpCollect_started;
+        _inputAction.Player.PowerUpCollect.canceled -= PowerUpCollect_canceled;
+        _inputAction.Player.Disable();
     }
 }

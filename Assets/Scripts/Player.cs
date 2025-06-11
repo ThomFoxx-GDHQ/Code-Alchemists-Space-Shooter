@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -99,8 +100,15 @@ public class Player : MonoBehaviour
     float _closestMissileDist = Mathf.Infinity;
     float _checkingDist;
 
+    PlayerInputAction _inputAction;
+    Vector2 _movement = Vector2.zero;
+    bool _isFireBeingHeld = false;
+    bool _isLftShftHeld = false;
+
     void Start()
     {
+        InitializeInput();
+
         _spawnManager = GameObject.FindAnyObjectByType<SpawnManager>();
         _cameraManager = Camera.main.GetComponent<CameraManager>();
 
@@ -117,6 +125,44 @@ public class Player : MonoBehaviour
         _longWait = new WaitForSeconds(_longWaitTime);
     }
 
+    private void InitializeInput()
+    {
+        _inputAction = new PlayerInputAction();
+        _inputAction.Player.Enable();
+        _inputAction.Player.Fire.started += Fire_started;
+        _inputAction.Player.Fire.canceled += Fire_canceled;
+        _inputAction.Player.ThrusterShift.started += ThrusterShift_started;
+        _inputAction.Player.ThrusterShift.canceled += ThrusterShift_canceled;
+    }
+
+    private void ThrusterShift_started(InputAction.CallbackContext obj)
+    {
+        _isLftShftHeld = true;
+    }
+
+    private void ThrusterShift_canceled(InputAction.CallbackContext obj)
+    {
+        _isLftShftHeld = false;
+    }
+
+    private void Fire_started(InputAction.CallbackContext obj)
+    {
+        _isFireBeingHeld = true;
+    }
+
+    private void Fire_canceled(InputAction.CallbackContext obj)
+    {
+        _isFireBeingHeld = false;
+    }
+
+    private void OnDisable()
+    {
+        _inputAction.Player.Fire.started -= Fire_started;
+        _inputAction.Player.Fire.canceled -= Fire_canceled;
+        _inputAction.Player.ThrusterShift.started -= ThrusterShift_started;
+        _inputAction.Player.ThrusterShift.canceled -= ThrusterShift_canceled;
+    }
+
     void Update()
     {
         _wasHitThisFrame = false;
@@ -125,7 +171,7 @@ public class Player : MonoBehaviour
         CalculateMovement(); // Process movement input and apply movement
 
         // Check if space key is pressed and shooting cooldown has elapsed
-        if (Input.GetKey(KeyCode.Space) && _whenCanFire < Time.time)
+        if (_isFireBeingHeld && _whenCanFire < Time.time)
         {
             FireLaser();
         }
@@ -135,12 +181,12 @@ public class Player : MonoBehaviour
     {
         if (_engineHeat <= _maxEngineHeat && !_isEngineOverheated)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (_isLftShftHeld)
             {
                 _thrustingMultiplier = _thrustMultiplier;
                 _isThrustActive = true;
             }
-            if (Input.GetKeyUp(KeyCode.LeftShift))
+            else
             {
                 _thrustingMultiplier = 1;
                 _isThrustActive = false;
@@ -173,12 +219,18 @@ public class Player : MonoBehaviour
 
     private void CalculateMovement()
     {
-        // Get movement input from player
-        _horizontalInput = Input.GetAxis("Horizontal");
-        _verticalInput = Input.GetAxis("Vertical");
-        //_direction = new Vector3(_horizontalInput, _verticalInput, 0);
-        _direction.x = _horizontalInput;
-        _direction.y = _verticalInput;
+        // ### Legacy Input Manager Code ### //
+        //// Get movement input from player
+        //_horizontalInput = Input.GetAxis("Horizontal");
+        //_verticalInput = Input.GetAxis("Vertical");
+        ////_direction = new Vector3(_horizontalInput, _verticalInput, 0);
+        //_direction.x = _horizontalInput;
+        //_direction.y = _verticalInput;
+        //_direction.z = 0;
+
+        // ### New Input System Code ### //
+        _movement = _inputAction.Player.Movement.ReadValue<Vector2>();
+        _direction = _movement;
         _direction.z = 0;
 
         // Move player based on input and speed
