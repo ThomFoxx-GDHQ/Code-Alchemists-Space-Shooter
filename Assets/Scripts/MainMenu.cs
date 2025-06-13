@@ -1,13 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 public class MainMenu : MonoBehaviour
 {
-    public SceneAsset _firstLevelScene;
+    public Scene _firstLevelScene;
 
     public void StartGame()
     {
-        SceneManager.LoadScene(_firstLevelScene.name);
+        SceneManager.LoadScene(1);
     }
 }

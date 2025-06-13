@@ -74,4 +74,11 @@ public class GameManager : MonoBehaviour
     {
         _isPlayerDead = true;
     }
+
+    private void OnDisable()
+    {
+        _inputActions.Player.Escape.performed -= Escape_performed;
+        _inputActions.Player.Restart.performed -= Restart_performed;
+        _inputActions.Player.Disable();
+    }
 }

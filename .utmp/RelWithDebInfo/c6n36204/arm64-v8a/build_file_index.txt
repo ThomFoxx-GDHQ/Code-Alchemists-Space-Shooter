@@ -1,0 +1,2 @@
+F:\Coding\GameBuilds\Code Alchemists Space Shooter\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+F:\Coding\GameBuilds\Code Alchemists Space Shooter\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

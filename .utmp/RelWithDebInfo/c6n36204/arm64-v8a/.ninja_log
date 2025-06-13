@@ -1,0 +1,10 @@
+# ninja log v5
+18	851	7714744690103792	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	3531c65ecfa17e3f
+0	930	7714744690239618	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	90b6e6dd36885d3b
+36	932	7714744690390563	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	bb2a009db1aee6e7
+11	958	7714744690662828	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	c9c3b57d13500c21
+4	981	7714744691227323	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	4a386d2c4b11b472
+24	992	7714744690662828	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	644088334c0a4585
+15	1001	7714744692331221	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	142f6eac5edc482
+8	1009	7714744692757542	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	73e091c7dd7c3ee9
+1009	1182	7714744694309396	F:/Coding/GameBuilds/Code Alchemists Space Shooter/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/c6n36204/obj/arm64-v8a/libgame.so	cd90538c003b55cf
